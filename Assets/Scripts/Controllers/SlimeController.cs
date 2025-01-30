@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IMovementSpecialController, IAttackController
+public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IAttackController
 {
 	public enum Element {Air,Water,Earth,Fire};
 	
