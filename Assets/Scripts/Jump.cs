@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(IJumpController), typeof(Ground), typeof(Rigidbody2D))]
 public class Jump : MonoBehaviour
 {
-    [SerializeField, Range(0f, 10f)] private float _jumpHeight = 3f;
+    [SerializeField, Range(0f, 20f)] private float _jumpHeight = 3f;
     [SerializeField, Range(0, 5)] private int _maxAirJumps = 0;
     [SerializeField, Range(0f, 5f)] private float _downwardMovementMultiplier = 3f;
     [SerializeField, Range(0f, 5f)] private float _upwardMovementMultiplier = 1.7f;
