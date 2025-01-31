@@ -13,6 +13,8 @@ public class Jump : MonoBehaviour
     private Ground _ground;
     private int _jumpPhase;
 
+    public bool isDashing = false;
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
@@ -32,6 +34,12 @@ public class Jump : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDashing)
+        {
+            _body.gravityScale = 0f;
+            return;
+        }
+        
         if (_ground.onGround)
         {
             _jumpPhase = 0;

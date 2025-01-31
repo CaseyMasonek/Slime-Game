@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody2D),typeof(Ground))]
+[RequireComponent(typeof(Rigidbody2D),typeof(Ground),typeof(Direction))]
 public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IAttackController
 {
     // Public variables
@@ -18,14 +19,24 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     // Components
 	private Rigidbody2D _body;
     private Ground _ground;
+    private Direction _direction;
+    private SpriteRenderer _spriteRenderer;
+    private Jump _jump;
     
     // Private variables
+    [SerializeField] private float airDashStrength = 20;
+    [SerializeField] private float fireDashStrength = 20;
+    [SerializeField] private float fireDashDuration = .5f;
+    
     private bool _canDash = true;
     
 	private void Start()
 	{
 		_body = gameObject.GetComponent<Rigidbody2D>();
         _ground = gameObject.GetComponent<Ground>();
+        _direction = GetComponent<Direction>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _jump = GetComponent<Jump>();
 	}
 
     public float GetMovement()
@@ -44,6 +55,29 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             OnAttack?.Invoke();
         }
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            switch (element)
+            {
+                case Element.Air:
+                    element = Element.Water;
+                    _spriteRenderer.color = Color.blue;
+                    break;
+                case Element.Water:
+                    element = Element.Earth;
+                    _spriteRenderer.color = Color.green;
+                    break;
+                case Element.Earth:
+                    element = Element.Fire;
+                    _spriteRenderer.color = Color.red;
+                    break;
+                case Element.Fire:
+                    element = Element.Air;
+                    _spriteRenderer.color = Color.white;
+                    break;
+            }
+        }
+        
         if (_ground.onGround)
         {
             _canDash = true;
@@ -56,7 +90,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     if (_canDash)
                     {
                         _body.velocity = new Vector2(_body.velocity.x, 0);
-                        _body.AddForce(new Vector2(0, 20), ForceMode2D.Impulse);
+                        _body.AddForce(new Vector2(0, airDashStrength), ForceMode2D.Impulse);
                         _canDash = false;
                     }
                     break;
@@ -67,10 +101,22 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     // Earth's here
                     break;
                 case Element.Fire:
-                    // Fire's here
+                    if (_canDash)
+                    {
+                        StartCoroutine(Dash());
+                        _body.velocity = new Vector2(0,0);
+                        _body.AddForce(new Vector2(_direction.AsSign() * fireDashStrength, 0), ForceMode2D.Impulse);
+                        _canDash = false;
+                    }
                     break;
             }
         }
-        
     }
+
+    private IEnumerator Dash()
+    {
+        _jump.isDashing = true;
+        yield return new WaitForSeconds(fireDashDuration);
+        _jump.isDashing = false;
+    } 
 }
