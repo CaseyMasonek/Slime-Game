@@ -28,11 +28,13 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private Camera _camera;
     
     // Private variables
-    [SerializeField] private float vineHookForce = 20;
+    [SerializeField] private float hookForce = 20;
+    [SerializeField] private float hookRange = 10f;
     [SerializeField] private float fireDashStrength = 20;
     [SerializeField] private float fireDashDuration = .5f;
     
     private bool _canDash = true;
+    private bool _isGrappling = false;
     
 	private void Start()
 	{
@@ -62,8 +64,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         {
             OnAttack?.Invoke();
         }
-
-        if (Input.GetKeyDown(KeyCode.P))
+        
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f ) // forward
         {
             switch (element)
             {
@@ -86,19 +88,35 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             }
         }
         
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // forward
+        {
+            switch (element)
+            {
+                case Element.Earth:
+                    element = Element.Water;
+                    _spriteRenderer.color = Color.blue;
+                    break;
+                case Element.Fire:
+                    element = Element.Earth;
+                    _spriteRenderer.color = Color.green;
+                    break;
+                case Element.Air:
+                    element = Element.Fire;
+                    _spriteRenderer.color = Color.red;
+                    break;
+                case Element.Water:
+                    element = Element.Air;
+                    _spriteRenderer.color = Color.white;
+                    break;
+            }
+        }
+        
         if (_ground.onGround)
         {
             _canDash = true;
         }
 
-        if (element == Element.Water)
-        {
-            _jump.isDashing = true;
-        }
-        else
-        {
-            _jump.isDashing = false;
-        }
+        _jump.isDashing = element == Element.Water;
         
         // Resetting var before switch so anything but air sets it to 0
         _jump.maxAirJumps = 0;
@@ -119,8 +137,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     Debug.Log(worldPoint);
                     
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(worldPoint.x,worldPoint.y,0) - transform.position).normalized );
-                    if ( hit.collider != null )
+                    
+                    if ( hit.collider != null && hit.distance <= hookRange )
                     {
+                        _isGrappling = true;
+                        
                         _lineRenderer.enabled = true;
                         
                         GameObject anchor =  new GameObject("Grappling Hook Anchor");
@@ -135,22 +156,27 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     }
                 }
 
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButton(0) && _isGrappling)
                 {
-                    GameObject anchor =  GameObject.Find("Grappling Hook Anchor");
-                    Debug.DrawLine(transform.position, anchor.transform.position, Color.red);
-                    
+                    GameObject anchor = GameObject.Find("Grappling Hook Anchor");
+
                     _lineRenderer.SetPosition(0, transform.position);
                     _lineRenderer.SetPosition(1, anchor.transform.position);
-                    
+
+                    if (Input.GetMouseButton(1))
+                    {
+                        _joint.distance -= hookForce * Time.deltaTime;
+                    }
                 }
                 
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(0) && _isGrappling)
                 {
                     _lineRenderer.enabled = false;
                     
                     Destroy(GameObject.Find("Grappling Hook Anchor"));
                     _joint.enabled = false;
+                    
+                    _isGrappling = false;
                 }
                 break;
             case Element.Fire:
