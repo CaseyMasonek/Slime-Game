@@ -23,8 +23,10 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private SpriteRenderer _spriteRenderer;
     private Jump _jump;
     
+    private Camera _camera;
+    
     // Private variables
-    [SerializeField] private float airDashStrength = 20;
+    [SerializeField] private float vineHookForce = 20;
     [SerializeField] private float fireDashStrength = 20;
     [SerializeField] private float fireDashDuration = .5f;
     
@@ -37,6 +39,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _direction = GetComponent<Direction>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _jump = GetComponent<Jump>();
+        
+        _camera = Camera.main;
 	}
 
     public float GetMovement()
@@ -82,34 +86,63 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         {
             _canDash = true;
         }
-        
-        if (Input.GetKeyDown(KeyCode.L))
+
+        if (element == Element.Water)
         {
-            switch (element) {
-                case Element.Air:
-                    if (_canDash)
+            _jump.isDashing = true;
+        }
+        else
+        {
+            _jump.isDashing = false;
+        }
+        
+        // Resetting var before switch so anything but air sets it to 0
+        _jump.maxAirJumps = 0;
+        
+        switch (element) {
+            case Element.Air:
+                _jump.maxAirJumps = 1;
+                break;
+            case Element.Water:
+                // Water movement ability here
+                break;
+            case Element.Earth:
+                // On click mouse
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
+                    RaycastHit2D hit = Physics2D.Raycast( transform.position, worldPoint );
+                    if ( hit.collider != null )
                     {
-                        _body.velocity = new Vector2(_body.velocity.x, 0);
-                        _body.AddForce(new Vector2(0, airDashStrength), ForceMode2D.Impulse);
-                        _canDash = false;
+                        GameObject anchor =  new GameObject("Grappling Hook Anchor");
+
+                        anchor.tag = "Anchor";
+                        
+                        anchor.transform.position = hit.point;
+                        Rigidbody2D rb = anchor.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
+                        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                        DistanceJoint2D joint = anchor.AddComponent(typeof(DistanceJoint2D)) as DistanceJoint2D;
+                        joint.connectedBody = _body;
+                        
+                        _body.velocity = Vector2.zero;
+                        _body.AddForce(new Vector2(vineHookForce * _direction.AsSign(), 0),ForceMode2D.Impulse);
                     }
-                    break;
-                case Element.Water:
-                    // Water movement ability here
-                    break;
-                case Element.Earth:
-                    // Earth's here
-                    break;
-                case Element.Fire:
-                    if (_canDash)
-                    {
-                        StartCoroutine(Dash());
-                        _body.velocity = new Vector2(0,0);
-                        _body.AddForce(new Vector2(_direction.AsSign() * fireDashStrength, 0), ForceMode2D.Impulse);
-                        _canDash = false;
-                    }
-                    break;
-            }
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Destroy(GameObject.FindWithTag("Anchor"));
+                }
+                break;
+            case Element.Fire:
+                if (_canDash && Input.GetMouseButtonDown(0))
+                {
+                    StartCoroutine(Dash());
+                    _body.velocity = new Vector2(0,0);
+                    _body.AddForce(new Vector2(_direction.AsSign() * fireDashStrength, 0), ForceMode2D.Impulse);
+                    _canDash = false;
+                }
+                break;
         }
     }
 
