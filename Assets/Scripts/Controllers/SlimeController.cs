@@ -22,6 +22,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private Direction _direction;
     private SpriteRenderer _spriteRenderer;
     private Jump _jump;
+    private LineRenderer _lineRenderer;
+    private DistanceJoint2D _joint;
     
     private Camera _camera;
     
@@ -39,6 +41,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _direction = GetComponent<Direction>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _jump = GetComponent<Jump>();
+        _lineRenderer = GetComponent<LineRenderer>();
+        _joint = GetComponent<DistanceJoint2D>();
         
         _camera = Camera.main;
 	}
@@ -111,9 +115,14 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (Input.GetMouseButtonDown(0))
                 {
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
-                    RaycastHit2D hit = Physics2D.Raycast( transform.position, worldPoint );
+                    
+                    Debug.Log(worldPoint);
+                    
+                    RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(worldPoint.x,worldPoint.y,0) - transform.position).normalized );
                     if ( hit.collider != null )
                     {
+                        _lineRenderer.enabled = true;
+                        
                         GameObject anchor =  new GameObject("Grappling Hook Anchor");
 
                         anchor.tag = "Anchor";
@@ -121,17 +130,27 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         anchor.transform.position = hit.point;
                         Rigidbody2D rb = anchor.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
                         rb.constraints = RigidbodyConstraints2D.FreezeAll;
-                        DistanceJoint2D joint = anchor.AddComponent(typeof(DistanceJoint2D)) as DistanceJoint2D;
-                        joint.connectedBody = _body;
-                        
-                        _body.velocity = Vector2.zero;
-                        _body.AddForce(new Vector2(vineHookForce * _direction.AsSign(), 0),ForceMode2D.Impulse);
+                        _joint.enabled = true;
+                        _joint.connectedBody = rb;
                     }
                 }
 
+                if (Input.GetMouseButton(0))
+                {
+                    GameObject anchor =  GameObject.Find("Grappling Hook Anchor");
+                    Debug.DrawLine(transform.position, anchor.transform.position, Color.red);
+                    
+                    _lineRenderer.SetPosition(0, transform.position);
+                    _lineRenderer.SetPosition(1, anchor.transform.position);
+                    
+                }
+                
                 if (Input.GetMouseButtonUp(0))
                 {
-                    Destroy(GameObject.FindWithTag("Anchor"));
+                    _lineRenderer.enabled = false;
+                    
+                    Destroy(GameObject.Find("Grappling Hook Anchor"));
+                    _joint.enabled = false;
                 }
                 break;
             case Element.Fire:
