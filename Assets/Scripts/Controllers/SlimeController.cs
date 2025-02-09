@@ -35,7 +35,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     private bool _canDash = true;
     private bool _isGrappling = false;
-    private int _boost = 0;
     
 	private void Start()
 	{
@@ -163,10 +162,19 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
                     _lineRenderer.SetPosition(0, transform.position);
                     _lineRenderer.SetPosition(1, anchor.transform.position);
+                    
+                    _joint.distance -= hookForce * Time.deltaTime;
+                    
+                    RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(anchor.transform.position.x,anchor.transform.position.y,0) - transform.position).normalized );
 
-                    if (Input.GetMouseButton(1))
+                    if (new Vector3(hit.point.x,hit.point.y,0) != anchor.transform.position)
                     {
-                        _joint.distance -= hookForce * Time.deltaTime;
+                        _lineRenderer.enabled = false;
+                    
+                        Destroy(GameObject.Find("Grappling Hook Anchor"));
+                        _joint.enabled = false;
+                    
+                        _isGrappling = false;
                     }
                 }
                 

@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemyController : IMovementController
+[RequireComponent(typeof(Direction),typeof(Ground))]
+public class BasicEnemyController : MonoBehaviour, IMovementController
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float moveSpeed;
+
+    private Direction _direction;
+    private Ground _ground;
+
+    private void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public float GetMovement()
     {
-        
+        return moveSpeed * _direction.AsSign();
     }
 }
