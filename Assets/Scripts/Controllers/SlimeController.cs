@@ -35,6 +35,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     private bool _canDash = true;
     private bool _isGrappling = false;
+    private int _boost = 0;
     
 	private void Start()
 	{
@@ -88,7 +89,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             }
         }
         
-        if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // forward
+        if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // backward
         {
             switch (element)
             {
