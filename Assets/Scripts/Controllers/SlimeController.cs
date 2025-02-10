@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -115,8 +116,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         {
             _canDash = true;
         }
-
-        _jump.isDashing = element == Element.Water;
         
         // Resetting var before switch so anything but air sets it to 0
         _jump.maxAirJumps = 0;
@@ -126,7 +125,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 _jump.maxAirJumps = 1;
                 break;
             case Element.Water:
-                // Water movement ability here
+                Debug.Log(_ground.wall);
                 break;
             case Element.Earth:
                 // On click mouse
@@ -205,5 +204,5 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _jump.isDashing = true;
         yield return new WaitForSeconds(fireDashDuration);
         _jump.isDashing = false;
-    } 
+    }
 }

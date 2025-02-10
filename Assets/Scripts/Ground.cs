@@ -15,6 +15,8 @@ public class Ground : MonoBehaviour
         }
     }
 
+    public int wall;
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
@@ -33,6 +35,7 @@ public class Ground : MonoBehaviour
     {
         friction = 0;
         ground = null;
+        wall = 0;
     }
 
     private void EvaluateCollision(Collision2D collision)
@@ -44,6 +47,18 @@ public class Ground : MonoBehaviour
             {
                 ground = collision.transform;
             }
+
+            if (normal.x >= 0.9f)
+            {
+                wall = -1;
+            } else if (normal.x <= -0.9f)
+            {
+                wall = 1;
+            } else
+            {
+                wall = 0;
+            }
+            
         }
     }
 
