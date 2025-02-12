@@ -17,6 +17,6 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
 
     public float GetMovement()
     {
-        return moveSpeed * _direction.AsSign();
+        return 2;
     }
 }

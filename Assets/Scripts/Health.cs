@@ -18,11 +18,6 @@ public class Health : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
-
-        if (health <= 0 )
-        {
-            Debug.Log("Dead");
-        }
     }
 
     public void Heal(int amount, bool overheal = false)

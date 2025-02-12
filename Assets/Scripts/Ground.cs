@@ -19,6 +19,7 @@ public class Ground : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("Collision!");
         if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
         EvaluateCollision(collision);
         GetFriction(collision);

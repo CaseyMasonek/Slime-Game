@@ -25,7 +25,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private Jump _jump;
     private LineRenderer _lineRenderer;
     private DistanceJoint2D _joint;
-    
+    private Health _health; 
+           
     private Camera _camera;
     
     // Private variables
@@ -33,9 +34,14 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float hookRange = 10f;
     [SerializeField] private float fireDashStrength = 20;
     [SerializeField] private float fireDashDuration = .5f;
+    [SerializeField] private float wallJumpHeight = 10;
+    [SerializeField] private float wallJumpDuration = .2f;
+    [SerializeField] private float wallJumpDistance = 10;
     
     private bool _canDash = true;
     private bool _isGrappling = false;
+    private bool _canWallJump = true;
+    private float _movementScale = 1;
     
 	private void Start()
 	{
@@ -46,13 +52,14 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _jump = GetComponent<Jump>();
         _lineRenderer = GetComponent<LineRenderer>();
         _joint = GetComponent<DistanceJoint2D>();
+        _health = GetComponent<Health>();
         
         _camera = Camera.main;
 	}
 
     public float GetMovement()
     {
-        return Input.GetAxis("Horizontal");
+        return Input.GetAxis("Horizontal") * _movementScale;
     }
 
     private void Update()
@@ -125,7 +132,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 _jump.maxAirJumps = 1;
                 break;
             case Element.Water:
-                Debug.Log(_ground.wall);
+                if (_ground.wall != 0 && Input.GetKey(KeyCode.Space) && _canWallJump && !_ground.onGround)
+                {
+                    _canWallJump = false;
+                    _body.AddForce(new Vector2(wallJumpDistance * _ground.wall,wallJumpHeight), ForceMode2D.Impulse);
+                    StartCoroutine(WallJump());
+                } 
                 break;
             case Element.Earth:
                 // On click mouse
@@ -199,6 +211,14 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         }
     }
 
+    private IEnumerator WallJump()
+    {
+        _movementScale = 0;
+        yield return new WaitForSeconds(wallJumpDuration);
+        _canWallJump = true;
+        _movementScale = 1;
+    }
+    
     private IEnumerator Dash()
     {
         _jump.isDashing = true;
