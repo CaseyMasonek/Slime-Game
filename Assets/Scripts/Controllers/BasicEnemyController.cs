@@ -11,6 +11,8 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     private Direction _direction;
     private Ground _ground;
 	private Rigidbody2D _body;
+    
+    private bool _canFlip = false;
 
     private void Start()
     {
@@ -21,9 +23,15 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
 
     private void Update()
     {
-        if (_ground.wall != 0 || Mathf.Abs(_body.velocity.x) < flipThreshold)
+        if (Mathf.Abs(_body.velocity.x) > flipThreshold)
+        {
+            _canFlip = true;
+        }
+        
+        if (_ground.wall != 0 || (Mathf.Abs(_body.velocity.x) < flipThreshold && _canFlip))
         {
             _direction.Flip();
+            _canFlip = false;
         }
     }
 
