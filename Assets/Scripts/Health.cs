@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Die))]
+//[RequireComponent(typeof(Die))]
 public class Health : MonoBehaviour
 {
     public int health;
     public int maxHealth;
 
-    private Die _die;
+    //private Die _die;
 
     private void Start()
     {
-        _die = GetComponent<Die>();
+        //_die = GetComponent<Die>();
     }
 
     public void TakeDamage(int damage)
