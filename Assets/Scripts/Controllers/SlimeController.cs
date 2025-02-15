@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D),typeof(Ground),typeof(Direction))]
@@ -37,14 +38,20 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float wallJumpHeight = 10;
     [SerializeField] private float wallJumpDuration = .2f;
     [SerializeField] private float wallJumpDistance = 10;
-    [SerializeField] private float fireBallDuration = .2f;
-
+    [SerializeField] private float fireBallCooldown = .2f;
+    [SerializeField] private float meleeCooldown = .2f;
+    
     [SerializeField] private GameObject fireball;
     
     private bool _canDash = true;
     private bool _isGrappling = false;
     private bool _canWallJump = true;
     private bool _fireballCooldown = false;
+    private bool _canMelee = true;
+    
+    public Vector2 attackOffset;
+    public Vector2 attackSize = new Vector2(1, 2);
+    public float hitForce;
     
     private float _movementScale = 1;
     
@@ -146,6 +153,19 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     _body.AddForce(new Vector2(wallJumpDistance * _ground.wall,wallJumpHeight), ForceMode2D.Impulse);
                     StartCoroutine(WallJump());
                 } 
+                
+                // Melee attack
+                if (Input.GetMouseButtonDown(0) && _canMelee)
+                {
+                    LayerMask layerMask = LayerMask.GetMask("Enemy");
+                    float k = _direction?.AsSign() ?? 1;
+                    Collider2D collider = Physics2D.OverlapBox(transform.position + new Vector3(attackOffset.x * k, attackOffset.y, 0), attackSize, 0f, layerMask);
+                    if (!collider) return;
+                    
+                    collider.GetComponent<Health>().TakeDamage(1);
+                    
+                    Debug.Log(collider.name);
+                }
                 break;
             case Element.Earth:
                 // Vine hook
@@ -157,7 +177,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(worldPoint.x,worldPoint.y,0) - transform.position).normalized );
                     
-                    if ( hit.collider != null && hit.distance <= hookRange )
+                    if ( hit.collider != null && hit.distance <= hookRange)
                     {
                         // Create joint
                         
@@ -166,7 +186,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         _lineRenderer.enabled = true;
                         
                         GameObject anchor =  new GameObject("Grappling Hook Anchor");
-
+                        
                         anchor.tag = "Anchor";
                         
                         anchor.transform.position = hit.point;
@@ -228,7 +248,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 {
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
-
+                    
 // Calculate the angle to rotate the object
                     float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
 // Set the rotation to face the mouse in 2D (z-axis rotation)
@@ -259,7 +279,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private IEnumerator Fireball()
     {
         _fireballCooldown = true;
-        yield return new WaitForSeconds(fireBallDuration);
+        yield return new WaitForSeconds(fireBallCooldown);
         _fireballCooldown = false;
     }
 }
