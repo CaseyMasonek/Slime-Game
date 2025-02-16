@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Health))]
-public class Die : MonoBehaviour
+public class EnemyDie : MonoBehaviour
 {
     private Health _health;
     
@@ -16,7 +16,7 @@ public class Die : MonoBehaviour
     {
         if (_health.health <= 0)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Destroy(gameObject);
         }
     }
 }

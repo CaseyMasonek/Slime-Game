@@ -163,8 +163,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     if (!collider) return;
                     
                     collider.GetComponent<Health>().TakeDamage(1);
-                    
-                    Debug.Log(collider.name);
                 }
                 break;
             case Element.Earth:
