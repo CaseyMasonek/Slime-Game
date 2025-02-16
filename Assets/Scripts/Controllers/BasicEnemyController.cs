@@ -28,15 +28,19 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
             _canFlip = true;
         }
         
-        if (_ground.wall != 0 || (Mathf.Abs(_body.velocity.x) < flipThreshold && _canFlip))
+        if (Mathf.Abs(_body.velocity.x) < flipThreshold && _canFlip)
         {
             _direction.Flip();
             _canFlip = false;
         }
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.right * _direction.AsSign()),Vector2.down);
+        
+        if (hit.distance > 1) _direction.Flip();
     }
 
     public float GetMovement()
     {
-        return _direction.AsSign();
+        return _ground.onGround ? _direction.AsSign() : 0;
     }
 }

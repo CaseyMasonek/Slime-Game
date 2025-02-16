@@ -40,6 +40,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float wallJumpDistance = 10;
     [SerializeField] private float fireBallCooldown = .2f;
     [SerializeField] private float meleeCooldown = .2f;
+    [SerializeField] private Vector2 meleeForce;
     
     [SerializeField] private GameObject fireball;
     
@@ -157,12 +158,16 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 // Melee attack
                 if (Input.GetMouseButtonDown(0) && _canMelee)
                 {
+                    
                     LayerMask layerMask = LayerMask.GetMask("Enemy");
                     float k = _direction?.AsSign() ?? 1;
                     Collider2D collider = Physics2D.OverlapBox(transform.position + new Vector3(attackOffset.x * k, attackOffset.y, 0), attackSize, 0f, layerMask);
                     if (!collider) return;
                     
                     collider.GetComponent<Health>().TakeDamage(1);
+                    collider.GetComponent<Rigidbody2D>().AddForce(meleeForce * _direction.AsSign(), ForceMode2D.Impulse);
+                    
+                    StartCoroutine(Melee());
                 }
                 break;
             case Element.Earth:
@@ -247,9 +252,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
                     
-// Calculate the angle to rotate the object
                     float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
-// Set the rotation to face the mouse in 2D (z-axis rotation)
                     Quaternion rotation = Quaternion.Euler(0, 0, angle);
             
                     Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
@@ -259,6 +262,13 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         }
     }
 
+    private IEnumerator Melee()
+    {
+        _canMelee = false;
+        yield return new WaitForSeconds(meleeCooldown);
+        _canMelee = true;
+    }
+    
     private IEnumerator WallJump()
     {
         _movementScale = 0;

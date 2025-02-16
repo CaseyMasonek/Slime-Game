@@ -118,7 +118,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &295736337918814164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,10 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00494185980e8e43acfea282ef378d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 5.1
-  _maxAcceleration: 25.3
-  _maxAirAcceleration: 20
-  _maxDeceleration: 50
+  _maxSpeed: 11.9
+  _maxAcceleration: 7.7
+  _maxAirAcceleration: 0.9
+  _maxDeceleration: 100
   _maxAirDeceleration: 40
 --- !u!58 &8290425114097644525
 CircleCollider2D:
