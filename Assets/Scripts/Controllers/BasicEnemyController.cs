@@ -14,6 +14,14 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     
     private bool _canFlip = false;
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<Health>().TakeDamage(1);
+        }
+    }
+    
     private void Start()
     {
         _direction = GetComponent<Direction>();

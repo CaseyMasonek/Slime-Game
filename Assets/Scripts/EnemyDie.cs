@@ -3,20 +3,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Health))]
-public class EnemyDie : MonoBehaviour
+public class EnemyDie : MonoBehaviour, IDieController
 {
-    private Health _health;
+    public void OnDie()
+    {
+        Destroy(gameObject);
+    }
     
-    private void Start()
-    {
-        _health = GetComponent<Health>();
-    }
-
-    private void Update()
-    {
-        if (_health.health <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
+    public void OnTakeDamage() {}
 }

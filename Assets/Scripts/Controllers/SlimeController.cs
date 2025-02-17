@@ -52,8 +52,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     public Vector2 attackOffset;
     public Vector2 attackSize = new Vector2(1, 2);
-    public float hitForce;
-    
+   
     private float _movementScale = 1;
     
 	private void Start()

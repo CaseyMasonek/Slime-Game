@@ -1,6 +1,8 @@
 using System;
+using JetBrains.Annotations;
 
 interface IDieController
 {
-    public event Action OnDie;
+    public void OnDie();
+    [CanBeNull] public void OnTakeDamage();
 }

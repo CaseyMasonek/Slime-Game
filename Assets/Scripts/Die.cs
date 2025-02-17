@@ -1,22 +1,30 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Health))]
-public class Die : MonoBehaviour
+public class Die : MonoBehaviour, IDieController
 {
-    private Health _health;
+    [SerializeField] float gracePeriod = 0;
     
-    private void Start()
+    private Health Health => GetComponent<Health>();
+
+    public void OnDie()
     {
-        _health = GetComponent<Health>();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private void Update()
+    public void OnTakeDamage()
     {
-        if (_health.health <= 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        StartCoroutine(GracePeriod());
+    }
+
+    private IEnumerator GracePeriod()
+    {
+        Health.isInvincible = true;
+        yield return new WaitForSeconds(gracePeriod);
+        Health.isInvincible = false;
     }
 }
