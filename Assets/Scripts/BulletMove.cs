@@ -10,14 +10,12 @@ public class BulletMove : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Health>().TakeDamage(1);
+            collision.gameObject.GetComponent<Health>().TakeDamage(.1f);
         }
         Destroy(gameObject);
     }
     private void Update()
     {
         transform.Translate(Vector2.right * _speed * Time.deltaTime);
-        
-        Debug.Log(transform.position);
     }
 }

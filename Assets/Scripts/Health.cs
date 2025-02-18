@@ -5,8 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(IDieController))]
 public class Health : MonoBehaviour
 {
-    public int health;
-    public int maxHealth;
+    public float health;
+    public float maxHealth;
     public bool isInvincible = false;
 
     private IDieController _die;
@@ -16,7 +16,7 @@ public class Health : MonoBehaviour
         _die = GetComponent<IDieController>();
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (isInvincible) return;
         
@@ -29,7 +29,7 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void Heal(int amount, bool overheal = false)
+    public void Heal(float amount, bool overheal = false)
     {
         health += amount;
         
