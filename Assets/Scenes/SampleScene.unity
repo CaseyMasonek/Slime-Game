@@ -106872,7 +106872,7 @@ MonoBehaviour:
   meleeForce: {x: 10, y: 2}
   fireball: {fileID: 4978066377984788746, guid: 37e9da1f0b569436fbc6f7dd1fbad58c, type: 3}
   attackOffset: {x: 0, y: 0}
-  attackSize: {x: 1, y: 2}
+  attackSize: {x: 2, y: 2}
 --- !u!114 &1503862407
 MonoBehaviour:
   m_ObjectHideFlags: 0
