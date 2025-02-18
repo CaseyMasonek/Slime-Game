@@ -7,6 +7,7 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float flipThreshold;
+    [SerializeField] private float ledgeDistance;
 
     private Direction _direction;
     private Ground _ground;
@@ -31,6 +32,7 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
 
     private void Update()
     {
+        /*
         if (Mathf.Abs(_body.velocity.x) > flipThreshold)
         {
             _canFlip = true;
@@ -41,8 +43,9 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
             _direction.Flip();
             _canFlip = false;
         }
+        */
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.right * _direction.AsSign()),Vector2.down);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + (ledgeDistance * _direction.AsSign() * Vector3.right),Vector2.down);
         
         if (hit.distance > 1) _direction.Flip();
     }
