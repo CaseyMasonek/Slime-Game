@@ -15,8 +15,9 @@ public class Ground : MonoBehaviour
         }
     }
 
-    public int wall;
-
+    public int wall { get; private set; }
+    public bool inWater {get; private set; }
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground")) return;
@@ -24,6 +25,16 @@ public class Ground : MonoBehaviour
         GetFriction(collision);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        inWater = collision.gameObject.layer == LayerMask.NameToLayer("Water");
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        inWater = false;
+    }
+    
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.collider.gameObject.layer != LayerMask.NameToLayer("Ground")) return;

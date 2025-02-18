@@ -12,7 +12,7 @@ public class HealthBar : MonoBehaviour
     private RectTransform _rectTransform;
     
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         if (entity == null) entity = GameObject.FindGameObjectWithTag("Player");
         _health = entity.GetComponent<Health>();
@@ -20,7 +20,7 @@ public class HealthBar : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         float width = _health.health / _health.maxHealth;
         transform.localScale = new Vector3(_originalX * width, 0.1f,0);

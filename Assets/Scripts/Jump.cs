@@ -7,12 +7,13 @@ public class Jump : MonoBehaviour
     [SerializeField, Range(0f, 20f)] private float _jumpHeight = 3f;
     [SerializeField, Range(0f, 5f)] private float _downwardMovementMultiplier = 3f;
     [SerializeField, Range(0f, 5f)] private float _upwardMovementMultiplier = 1.7f;
-
+    [SerializeField, Range(0f, 100f)] private float swimForce = 5f;
+    
     private IJumpController _controller;
     private Rigidbody2D _body;
     private Ground _ground;
     private int _jumpPhase;
-
+    
     public int maxAirJumps = 1;
     public bool isDashing = false;
 
@@ -62,6 +63,11 @@ public class Jump : MonoBehaviour
 
     private void JumpAction()
     {
+        if (_ground.inWater)
+        {
+            _body.AddForce(Vector2.up * swimForce,ForceMode2D.Impulse);
+            return;
+        }
         if (!_ground.onGround && _jumpPhase >= maxAirJumps) return;
         _jumpPhase += 1;
 

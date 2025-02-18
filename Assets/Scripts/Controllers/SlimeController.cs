@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IAttackController
 {
     // Public variables
-	public enum Element {Air,Water,Earth,Fire};
+	public enum Element {Air,Water,Earth,Fire}
     
 	public Element element = Element.Air;
 
@@ -41,6 +41,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float fireBallCooldown = .2f;
     [SerializeField] private float meleeCooldown = .2f;
     [SerializeField] private Vector2 meleeForce;
+    [SerializeField] private float fireWaterDamage;
     
     [SerializeField] private GameObject fireball;
     
@@ -76,6 +77,23 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     private void Update()
     {
+        switch (element)
+        {
+            case Element.Air:
+                _body.mass = 1;
+                break;
+            case Element.Water:
+                _body.mass = 3;
+                break;
+            case Element.Earth:
+                _body.mass = 10;
+                break;
+            case Element.Fire:
+                _body.mass = 3;
+                if (_ground.inWater) _health.TakeDamage(fireWaterDamage * Time.deltaTime);
+                break;
+        }
+        
         if (Input.GetKeyDown(KeyCode.Space)) {
             OnJump?.Invoke();
         }
