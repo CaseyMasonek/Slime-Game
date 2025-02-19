@@ -65,6 +65,10 @@ public class Jump : MonoBehaviour
     {
         if (_ground.inWater)
         {
+            if (gameObject.GetComponent<SlimeController>() != null)
+            {
+                if (gameObject.GetComponent<SlimeController>().element == SlimeController.Element.Air) return;
+            }
             _body.AddForce(Vector2.up * swimForce,ForceMode2D.Impulse);
             return;
         }

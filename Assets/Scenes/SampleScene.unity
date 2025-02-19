@@ -106806,7 +106806,7 @@ MonoBehaviour:
   _jumpHeight: 15
   _downwardMovementMultiplier: 1.6
   _upwardMovementMultiplier: 5
-  swimForce: 26.2
+  swimForce: 14.3
   maxAirJumps: 1
   isDashing: 0
 --- !u!50 &1503862404
@@ -107433,15 +107433,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1175589239469291160, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.37
+      value: 2.8
       objectReference: {fileID: 0}
     - target: {fileID: 1175589239469291160, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.42
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1175589239469291160, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1175589239469291160, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
       propertyPath: m_LocalRotation.w

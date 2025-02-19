@@ -80,16 +80,16 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         switch (element)
         {
             case Element.Air:
-                _body.mass = 1;
+                _body.mass = .3f;
                 break;
             case Element.Water:
-                _body.mass = 3;
+                _body.mass = 1;
                 break;
             case Element.Earth:
-                _body.mass = 10;
+                _body.mass = 4;
                 break;
             case Element.Fire:
-                _body.mass = 3;
+                _body.mass = 1;
                 if (_ground.inWater) _health.TakeDamage(fireWaterDamage * Time.deltaTime);
                 break;
         }
