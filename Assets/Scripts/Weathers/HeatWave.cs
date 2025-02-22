@@ -31,4 +31,9 @@ public class HeatWave : WeatherEvent
             _slime.movementScale = 1;
         }
     }
+
+    private void OnDestroy()
+    {
+        _slime.movementScale = 1;
+    }
 }

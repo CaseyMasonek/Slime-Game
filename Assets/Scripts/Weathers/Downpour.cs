@@ -32,4 +32,9 @@ public class Downpour : WeatherEvent
             _jump.jumpScale = 1;
         }
     }
+
+    private void OnDestroy()
+    {
+        _jump.jumpScale = 1;
+    }
 }
