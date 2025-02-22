@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class WeatherEvent : MonoBehaviour
 {
-    public abstract string eventName { get; protected set; }
-    public abstract string description { get; protected set; }
+    public abstract string EventName { get; }
+    public abstract string Description { get; }
 }

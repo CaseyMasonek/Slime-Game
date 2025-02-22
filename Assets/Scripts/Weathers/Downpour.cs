@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Downpour : MonoBehaviour
+public class Downpour : WeatherEvent
 {
-    public string eventName = "Downpour";
-    public string description =  "Non-water aerial movement debuff";
+    public override string EventName { get; } = "Downpour";
+    public override string Description { get; } = "Non-water aerial movement debuff";
     
-    [SerializeField] private float debuff = 0.8f;
+    [SerializeField] private float debuff = 1.5f;
     
     // Start is called before the first frame update
     private GameObject _player;

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class SeismicMovement : MonoBehaviour
+public class SeismicMovement : WeatherEvent
 {
-    //public string eventName = "Seismic Movement";
-    //public string description = "Only air and earth can jump";
+    public override string EventName { get; }= "Seismic Movement";
+    public override string Description {get;} = "Only air and earth can jump";
     
     private GameObject _player;
     private SlimeController _slime;

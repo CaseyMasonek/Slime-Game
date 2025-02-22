@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-
-public class HeatWave : MonoBehaviour
-{
-    public string eventName { get; protected set; } = "Heat Wave";
-    public string description = "Non-fire movement debuff";
     
-    [SerializeField] private float speedDebuff = 0.8f;
+public class HeatWave : WeatherEvent
+{
+    public override string EventName { get; } = "Heat Wave";
+    public override string Description { get; } = "Non-fire horizontal movement debuff";
+    
+    [SerializeField] private float speedDebuff = 0.5f;
     
     // Start is called before the first frame update
     private GameObject _player;
