@@ -14,6 +14,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
 	public Element element = Element.Air;
 
+    public float movementScale = 1;
     // Actions from interfaces
     public event Action OnJump;
     public event Action OnAttack;
@@ -53,8 +54,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     public Vector2 attackOffset;
     public Vector2 attackSize = new Vector2(1, 2);
-   
-    private float _movementScale = 1;
     
 	private void Start()
 	{
@@ -72,7 +71,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     public float GetMovement()
     {
-        return Input.GetAxis("Horizontal") * _movementScale;
+        return Input.GetAxis("Horizontal") * movementScale;
     }
 
     private void Update()
@@ -288,10 +287,10 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     private IEnumerator WallJump()
     {
-        _movementScale = 0;
+        movementScale = 0;
         yield return new WaitForSeconds(wallJumpDuration);
         _canWallJump = true;
-        _movementScale = 1;
+        movementScale = 1;
     }
     
     private IEnumerator Dash()

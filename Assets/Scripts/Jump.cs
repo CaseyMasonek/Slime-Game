@@ -17,6 +17,8 @@ public class Jump : MonoBehaviour
     public int maxAirJumps = 1;
     public bool isDashing = false;
 
+    public float jumpScale = 1;
+    
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
@@ -49,7 +51,7 @@ public class Jump : MonoBehaviour
 
         if (_body.velocity.y > 0)
         {
-            _body.gravityScale = _upwardMovementMultiplier;
+            _body.gravityScale = _upwardMovementMultiplier * jumpScale;
         }
         else if (_body.velocity.y < 0)
         {
@@ -83,7 +85,7 @@ public class Jump : MonoBehaviour
         else if (_body.velocity.y < 0f)
         {
             jumpSpeed += Mathf.Abs(_body.velocity.y);
-        }
+        }   
         _body.velocity += Vector2.up * jumpSpeed;
     }
 }
