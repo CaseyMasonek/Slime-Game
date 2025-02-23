@@ -121,6 +121,11 @@ MonoBehaviour:
   meleeCooldown: 0.2
   meleeForce: {x: 10, y: 2}
   fireWaterDamage: 50
+  groundPoundForce: 1000
+  groundPoundKnockback: 0
+  airBlastRadius: 5
+  airBlastForceX: 10
+  airBlastForceY: 5
   fireball: {fileID: 4978066377984788746, guid: 37e9da1f0b569436fbc6f7dd1fbad58c, type: 3}
   attackOffset: {x: 0, y: 0}
   attackSize: {x: 2, y: 2}

@@ -43,6 +43,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float fireWaterDamage;
     [SerializeField] private float groundPoundForce;
     [SerializeField] private float groundPoundKnockback;
+    [SerializeField] private float airBlastRadius;
+    [SerializeField] private float airBlastForceX;
+    [SerializeField] private float airBlastForceY;
     [SerializeField] private GameObject fireball;
     
     private bool _canDash = true;
@@ -84,7 +87,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             _body.velocity = Vector2.zero;
             var other = collision.gameObject.GetComponent<Rigidbody2D>();
             other.velocity = Vector2.zero;
-            
+
             StartCoroutine(collision.gameObject.GetComponent<BasicEnemyController>().Stun(1));
 
             var direction = 1;
@@ -187,6 +190,22 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 _jump.maxAirJumps = 1;
                 
                 // Air blast
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Collider2D[] results = new Collider2D[100];
+                    ContactFilter2D filter = new ContactFilter2D();
+                    filter.SetLayerMask(LayerMask.GetMask("Enemy"));
+                    int count = Physics2D.OverlapCircle(transform.position, airBlastRadius,filter, results);
+                    
+                    foreach (var result in results)
+                    {
+                        if (result == null) continue;
+                        float distance = Vector2.Distance(transform.position, result.transform.position);
+                        Vector2 direction = (result.transform.position - transform.position).normalized;
+                        
+                        result.GetComponent<Rigidbody2D>().AddForce((1/distance) * airBlastForceX * direction + airBlastForceY * Vector2.up, ForceMode2D.Impulse);
+                    }
+                }
                 
                 break;
             case Element.Water:
