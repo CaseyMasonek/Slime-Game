@@ -19,7 +19,7 @@ public class SeismicMovement : WeatherEvent
     // Update is called once per frame
     void Update()
     {
-        if (!(_slime.element == SlimeController.Element.Air || _slime.element == SlimeController.Element.Earth))
+        if (!(_slime.element == Element.Air || _slime.element == Element.Earth))
         {
             _player.GetComponent<Jump>().enabled = false;
         }

@@ -23,7 +23,7 @@ public class Downpour : WeatherEvent
     // Update is called once per frame
     void Update()
     {
-        if (_slime.element != SlimeController.Element.Water)
+        if (_slime.element != Element.Water)
         {
             _jump.jumpScale = debuff;
         }

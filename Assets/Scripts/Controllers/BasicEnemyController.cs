@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 [RequireComponent(typeof(Direction),typeof(Ground))]
 public class BasicEnemyController : MonoBehaviour, IMovementController
 {
+    public Element element;
+    
     [SerializeField] private float moveSpeed;
     [SerializeField] private float flipThreshold;
     [SerializeField] private float ledgeDistance;
@@ -12,9 +15,10 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     private Direction _direction;
     private Ground _ground;
 	private Rigidbody2D _body;
+    private SpriteRenderer _spriteRenderer;
     
     private bool _canFlip = false;
-
+    
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -28,6 +32,26 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
         _direction = GetComponent<Direction>();
         _body = GetComponent<Rigidbody2D>();
         _ground = GetComponent<Ground>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        switch (element)
+        {
+            case Element.None:
+                _spriteRenderer.color = Color.white;
+                break;
+            case Element.Water:
+                _spriteRenderer.color = Color.blue;
+                break;
+            case Element.Earth:
+                _spriteRenderer.color = Color.green;
+                break;
+            case Element.Fire:
+                _spriteRenderer.color = Color.red;
+                break;
+            case Element.Air:
+                _spriteRenderer.color = Color.gray;
+                break;
+        }
     }
 
     private void Update()

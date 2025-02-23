@@ -22,7 +22,7 @@ public class HeatWave : WeatherEvent
     // Update is called once per frame
     void Update()
     {
-        if (_slime.element != SlimeController.Element.Fire)
+        if (_slime.element != Element.Fire)
         {
             _slime.movementScale = speedDebuff; 
         }

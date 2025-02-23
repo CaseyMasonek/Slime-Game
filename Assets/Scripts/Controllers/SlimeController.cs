@@ -10,8 +10,6 @@ using UnityEngine.UI;
 public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IAttackController
 {
     // Public variables
-	public enum Element {Air,Water,Earth,Fire}
-    
 	public Element element = Element.Air;
 
     public float movementScale = 1;
