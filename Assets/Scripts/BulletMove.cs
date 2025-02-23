@@ -10,7 +10,26 @@ public class BulletMove : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<Health>().TakeDamage(.3f);
+            float damage = 0.3f;
+            switch (collision.gameObject.GetComponent<BasicEnemyController>().element)
+            {
+                case Element.None:
+                    damage = .3f;
+                    break;
+                case Element.Fire:
+                    damage = 0;
+                    break;
+                case Element.Earth:
+                    damage = 0.2f;
+                    break;
+                case Element.Air:
+                    damage = 0.5f;
+                    break;
+                case Element.Water:
+                    damage = 0.1f;
+                    break;
+            }
+            collision.gameObject.GetComponent<Health>().TakeDamage(damage);
         }
         Destroy(gameObject);
     }

@@ -178,7 +178,27 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     Collider2D collider = Physics2D.OverlapBox(transform.position + new Vector3(attackOffset.x * k, attackOffset.y, 0), attackSize, 0f, layerMask);
                     if (!collider) return;
                     
-                    collider.GetComponent<Health>().TakeDamage(1);
+                    float damage = 1;
+                    switch (collider.GetComponent<BasicEnemyController>().element)
+                    {
+                        case Element.Air:
+                            damage = 1f;
+                            break;
+                        case Element.Water:
+                            damage = .2f;
+                            break;
+                        case Element.Earth:
+                            damage = 1.3f;
+                            break;
+                        case Element.Fire:
+                            damage = 2f;
+                            break;
+                        case Element.None:
+                            damage = 1f;
+                            break;
+                    }
+                    collider.GetComponent<Health>().TakeDamage(damage);
+                    
                     collider.GetComponent<Rigidbody2D>().AddForce(meleeForce * _direction.AsSign(), ForceMode2D.Impulse);
                     
                     StartCoroutine(Melee());
