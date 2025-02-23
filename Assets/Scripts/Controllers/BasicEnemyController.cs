@@ -7,6 +7,7 @@ using UnityEngine;
 public class BasicEnemyController : MonoBehaviour, IMovementController
 {
     public Element element;
+    public bool stunned = false;
     
     [SerializeField] private float moveSpeed;
     [SerializeField] private float flipThreshold;
@@ -16,6 +17,7 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     private Ground _ground;
 	private Rigidbody2D _body;
     private SpriteRenderer _spriteRenderer;
+    private Collider2D _collider;
     
     private bool _canFlip = false;
     
@@ -29,6 +31,7 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     
     private void Start()
     {
+        _collider = GetComponent<Collider2D>();
         _direction = GetComponent<Direction>();
         _body = GetComponent<Rigidbody2D>();
         _ground = GetComponent<Ground>();
@@ -76,6 +79,16 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
 
     public float GetMovement()
     {
+        if (stunned) return 0;
         return _ground.onGround ? _direction.AsSign() : 0;
+    }
+
+    public IEnumerator Stun(float t)
+    {
+        stunned = true;
+        transform.position += Vector3.forward;
+        yield return new WaitForSeconds(t);
+        transform.position -= Vector3.forward;
+        stunned = false;
     }
 }

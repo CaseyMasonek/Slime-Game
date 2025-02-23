@@ -6,7 +6,7 @@ using UnityEngine;
 public class SeismicMovement : WeatherEvent
 {
     public override string EventName { get; }= "Seismic Movement";
-    public override string Description {get;} = "Only air and earth can jump";
+    public override string Description { get; } = "Only air and earth can jump";
     
     private GameObject _player;
     private SlimeController _slime;

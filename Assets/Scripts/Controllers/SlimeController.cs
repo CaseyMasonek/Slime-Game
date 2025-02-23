@@ -41,7 +41,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float meleeCooldown = .2f;
     [SerializeField] private Vector2 meleeForce;
     [SerializeField] private float fireWaterDamage;
-    
+    [SerializeField] private float groundPoundForce;
+    [SerializeField] private float groundPoundKnockback;
     [SerializeField] private GameObject fireball;
     
     private bool _canDash = true;
@@ -49,6 +50,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private bool _canWallJump = true;
     private bool _fireballCooldown = false;
     private bool _canMelee = true;
+    private bool _isGroundPounding = false;
+
+    private DateTime _timer;
     
     public Vector2 attackOffset;
     public Vector2 attackSize = new Vector2(1, 2);
@@ -70,6 +74,32 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     public float GetMovement()
     {
         return Input.GetAxis("Horizontal") * movementScale;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Ground pound hit enemy logic
+        if (collision.gameObject.CompareTag("Enemy") && _isGroundPounding)
+        {
+            _body.velocity = Vector2.zero;
+            var other = collision.gameObject.GetComponent<Rigidbody2D>();
+            other.velocity = Vector2.zero;
+            
+            StartCoroutine(collision.gameObject.GetComponent<BasicEnemyController>().Stun(1));
+
+            var direction = 1;
+            if (collision.gameObject.transform.position.x < transform.position.x) direction = -1;
+            other.AddForce(meleeForce * direction, ForceMode2D.Impulse);
+            
+            collision.gameObject.GetComponent<Health>().TakeDamage((DateTime.Now - _timer).Milliseconds / 200f);
+            
+        }
+        _isGroundPounding = false;
+    }
+
+    private void OnCollisionStay(Collision other)
+    {
+        _health.isInvincible = false;
     }
 
     private void Update()
@@ -269,6 +299,20 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     _isGrappling = false;
                 }
+                
+                // Ground pound
+                if (Input.GetMouseButtonDown(1))
+                {
+                    _timer = DateTime.Now;
+                    _isGroundPounding = true;
+                    _health.isInvincible = true;
+                }
+
+                if (_isGroundPounding)
+                {
+                    _body.AddForce(new Vector2(0f,-groundPoundForce*Time.deltaTime), ForceMode2D.Impulse);
+                }
+                
                 break;
             case Element.Fire:
                 // Dash
@@ -323,5 +367,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _fireballCooldown = true;
         yield return new WaitForSeconds(fireBallCooldown);
         _fireballCooldown = false;
+    }
+
+    private IEnumerator GracePeriod(float t)
+    {
+        _health.isInvincible = true;
+        yield return new WaitForSeconds(t);
+        _health.isInvincible = false;
     }
 }

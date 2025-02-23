@@ -381,6 +381,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 7772418094093507195, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
+      propertyPath: element
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -107188,6 +107192,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6596756170012432474, guid: c5b936fcba6f54570bc9180bda610074, type: 3}
+      propertyPath: groundPoundForce
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -107381,7 +107389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7772418094093507195, guid: 24215c4dc1bc346b699f6d20519d7f80, type: 3}
       propertyPath: element
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
