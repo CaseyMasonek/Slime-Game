@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D),typeof(Ground),typeof(Direction))]
-public class SlimeController : MonoBehaviour, IMovementController, IJumpController, IAttackController
+public class SlimeController : MonoBehaviour, IMovementController, IJumpController
 {
     // Public variables
 	public Element element = Element.Air;
@@ -91,14 +91,10 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             if (collision.gameObject.transform.position.x < transform.position.x) direction = -1;
             other.AddForce(meleeForce * direction, ForceMode2D.Impulse);
             
-            collision.gameObject.GetComponent<Health>().TakeDamage((DateTime.Now - _timer).Milliseconds / 200f);
+            collision.gameObject.GetComponent<Health>().TakeDamage((DateTime.Now - _timer).Milliseconds / 50f);
             
         }
         _isGroundPounding = false;
-    }
-
-    private void OnCollisionStay(Collision other)
-    {
         _health.isInvincible = false;
     }
 
@@ -189,6 +185,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             case Element.Air:
                 // Double jump
                 _jump.maxAirJumps = 1;
+                
+                // Air blast
+                
                 break;
             case Element.Water:
                 // Wall jump
@@ -329,6 +328,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 {
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
+                    
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, directionVector);
+                    if (hit.distance < 1) return;
                     
                     float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
                     Quaternion rotation = Quaternion.Euler(0, 0, angle);
