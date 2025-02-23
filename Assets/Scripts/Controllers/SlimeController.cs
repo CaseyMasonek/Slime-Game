@@ -90,6 +90,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
             StartCoroutine(collision.gameObject.GetComponent<BasicEnemyController>().Stun(1));
 
+            _health.Heal(1);
+            
             var direction = 1;
             if (collision.gameObject.transform.position.x < transform.position.x) direction = -1;
             other.AddForce(meleeForce * direction, ForceMode2D.Impulse);
