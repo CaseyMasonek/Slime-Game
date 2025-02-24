@@ -105,6 +105,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) element = Element.Air;
+        if (Input.GetKeyDown(KeyCode.Alpha2)) element = Element.Water;
+        if (Input.GetKeyDown(KeyCode.Alpha3)) element = Element.Earth;
+        if (Input.GetKeyDown(KeyCode.Alpha4)) element = Element.Fire;
+        
         switch (element)
         {
             case Element.Air:
@@ -131,25 +136,37 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             OnAttack?.Invoke();
         }
         
+        switch (element)
+        {
+            case Element.Air:
+                _spriteRenderer.color = Color.white;
+                break;
+            case Element.Water:
+                _spriteRenderer.color = Color.blue;
+                break;
+            case Element.Earth:
+                _spriteRenderer.color = Color.green;
+                break;
+            case Element.Fire:
+                _spriteRenderer.color = Color.red;
+                break;
+        }
+        
         if (Input.GetAxis("Mouse ScrollWheel") > 0f ) // forward
         {
             switch (element)
             {
                 case Element.Air:
                     element = Element.Water;
-                    _spriteRenderer.color = Color.blue;
                     break;
                 case Element.Water:
                     element = Element.Earth;
-                    _spriteRenderer.color = Color.green;
                     break;
                 case Element.Earth:
                     element = Element.Fire;
-                    _spriteRenderer.color = Color.red;
                     break;
                 case Element.Fire:
                     element = Element.Air;
-                    _spriteRenderer.color = Color.white;
                     break;
             }
         }
@@ -160,19 +177,15 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             {
                 case Element.Earth:
                     element = Element.Water;
-                    _spriteRenderer.color = Color.blue;
                     break;
                 case Element.Fire:
                     element = Element.Earth;
-                    _spriteRenderer.color = Color.green;
                     break;
                 case Element.Air:
                     element = Element.Fire;
-                    _spriteRenderer.color = Color.red;
                     break;
                 case Element.Water:
                     element = Element.Air;
-                    _spriteRenderer.color = Color.white;
                     break;
             }
         }
