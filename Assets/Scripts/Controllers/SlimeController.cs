@@ -264,7 +264,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(worldPoint.x,worldPoint.y,0) - transform.position).normalized );
                     
-                    if ( hit.collider != null && hit.distance <= hookRange)
+                    if ( hit.collider != null && hit.distance <= hookRange && hit.collider.gameObject.CompareTag("Grappleable"))
                     {
                         // Create joint
                         
