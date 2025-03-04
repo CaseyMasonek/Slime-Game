@@ -7,9 +7,15 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Health))]
 public class EnemyDie : MonoBehaviour, IDieController
 {
+    private bool _alive = true;
+    
     public void OnDie()
     {
-        StartCoroutine(Die());
+        if (_alive)
+        {
+            _alive = false;
+            StartCoroutine(Die());
+        }
     }
 
     private IEnumerator Die()
