@@ -33,6 +33,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float hookForce = 20;
     [SerializeField] private float hookRange = 10f;
     [SerializeField] private float fireDashStrength = 20;
+    [SerializeField] private float fireDashDistance = 5;
     [SerializeField] private float fireDashDuration = .5f;
     [SerializeField] private float wallJumpHeight = 10;
     [SerializeField] private float wallJumpDuration = .2f;
@@ -352,8 +353,20 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (_canDash && Input.GetMouseButtonDown(1))
                 {
                     StartCoroutine(Dash());
+
+                    /* old dash logic
                     _body.velocity = new Vector2(0,0);
                     _body.AddForce(new Vector2(_direction.AsSign() * fireDashStrength, 0), ForceMode2D.Impulse);
+                    */
+
+                    // Check if nothing's in the way
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * _direction.AsSign());
+
+                    if (hit.distance > fireDashDistance) // if not then dash
+                    {
+                        transform.position += Vector3.right * _direction.AsSign() * fireDashDistance;
+                    }
+
                     _canDash = false;
                 }
                 
