@@ -26,6 +26,7 @@ public class Health : MonoBehaviour
         if (health <= 0)
         {
             _die.OnDie();
+            health = 0;
         }
     }
 

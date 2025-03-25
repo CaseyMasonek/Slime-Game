@@ -14,6 +14,7 @@ public class EnemyDie : MonoBehaviour, IDieController
         if (_alive)
         {
             _alive = false;
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
             StartCoroutine(Die());
         }
     }
