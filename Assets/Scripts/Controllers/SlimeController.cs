@@ -55,7 +55,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private bool _fireballCooldown = false;
     private bool _canMelee = true;
     private bool _isGroundPounding = false;
+    
+    [SerializeField] private float airBlastDuration = .4f;
+    public float airBlastProgress = 0;
 
+    private float _grappleTime = 0;
     private DateTime _timer;
     
     public Vector2 attackOffset;
@@ -206,7 +210,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 _jump.maxAirJumps = 1;
                 
                 // Air blast
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && airBlastProgress == 0)
                 {
                     Collider2D[] results = new Collider2D[100];
                     ContactFilter2D filter = new ContactFilter2D();
@@ -221,6 +225,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         
                         result.GetComponent<Rigidbody2D>().AddForce((1/distance) * airBlastForceX * direction + airBlastForceY * Vector2.up, ForceMode2D.Impulse);
                     }
+
+                    StartCoroutine(AirBlastCooldown());
                 }
                 
                 break;
@@ -273,15 +279,16 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (Input.GetMouseButtonDown(0))
                 {
                     // Get mouse coordinates
-                    
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(worldPoint.x,worldPoint.y,0) - transform.position).normalized );
                     
-                    if ( hit.collider != null && hit.distance <= hookRange && hit.collider.gameObject.CompareTag("Grappleable"))
+                    // If grappling "grappleable" world element
+                    if ( hit.collider != null && hit.distance <= hookRange && (hit.collider.gameObject.CompareTag("Grappleable") || hit.collider.gameObject.CompareTag("Enemy")))
                     {
-                        // Create joint
+                        _grappleTime = 0;
                         
+                        // Create joint
                         _isGrappling = true;
                         
                         _lineRenderer.enabled = true;
@@ -292,7 +299,14 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         
                         anchor.transform.position = hit.point;
                         Rigidbody2D rb = anchor.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
+
+                        if (hit.collider.gameObject.CompareTag("Enemy"))
+                        {
+                            anchor.transform.SetParent(hit.collider.transform);
+                        }
+
                         rb.constraints = RigidbodyConstraints2D.FreezeAll;
+                        
                         _joint.enabled = true;
                         _joint.connectedBody = rb;
                     }
@@ -302,17 +316,19 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 {
                     GameObject anchor = GameObject.Find("Grappling Hook Anchor");
                     
+                    _grappleTime += 100 * Time.deltaTime;
+                    
                     // Render vine
                     _lineRenderer.SetPosition(0, transform.position);
                     _lineRenderer.SetPosition(1, anchor.transform.position);
                     
                     // Pull player
-                    _joint.distance -= hookForce * Time.deltaTime;
+                    _joint.distance -= hookForce * Time.deltaTime * (1+_grappleTime);
                     
                     // Break vine if block in the way
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(anchor.transform.position.x,anchor.transform.position.y,0) - transform.position).normalized );
 
-                    if (new Vector3(hit.point.x,hit.point.y,0) != anchor.transform.position)
+                    if (new Vector3(hit.point.x,hit.point.y,0) != anchor.transform.position && !hit.collider.CompareTag("Enemy"))
                     {
                         _lineRenderer.enabled = false;
                     
@@ -352,22 +368,21 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 // Dash
                 if (_canDash && Input.GetMouseButtonDown(1))
                 {
-                    StartCoroutine(Dash());
-
-                    /* old dash logic
-                    _body.velocity = new Vector2(0,0);
-                    _body.AddForce(new Vector2(_direction.AsSign() * fireDashStrength, 0), ForceMode2D.Impulse);
-                    */
-
                     // Check if nothing's in the way
                     RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * _direction.AsSign());
 
                     if (hit.distance > fireDashDistance) // if not then dash
                     {
+                        // Play particles
+                        ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
+                        particles.Play();
+                        
+                        // Dash
                         transform.position += Vector3.right * _direction.AsSign() * fireDashDistance;
+                        
+                        _canDash = false;
                     }
-
-                    _canDash = false;
+                    
                 }
                 
                 // Fireball
@@ -389,6 +404,22 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         }
     }
 
+    private IEnumerator AirBlastCooldown()
+    {
+        airBlastProgress = 1;
+
+        float sum = 0;
+        
+        while (sum < airBlastDuration)
+        {
+            sum += Time.deltaTime;
+            airBlastProgress = 1 - Mathf.Clamp01(sum / airBlastDuration);
+            yield return null;
+        }
+
+        airBlastProgress = 0;
+    }
+
     private IEnumerator Melee()
     {
         _canMelee = false;
@@ -402,13 +433,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         yield return new WaitForSeconds(wallJumpDuration);
         _canWallJump = true;
         movementScale = 1;
-    }
-    
-    private IEnumerator Dash()
-    {
-        _jump.isDashing = true;
-        yield return new WaitForSeconds(fireDashDuration);
-        _jump.isDashing = false;
     }
 
     private IEnumerator Fireball()
