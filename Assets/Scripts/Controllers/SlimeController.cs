@@ -59,6 +59,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float airBlastDuration = .4f;
     public float airBlastProgress = 0;
 
+    [SerializeField] private float fireballDuration = .1f;
+    public float fireballProgress = 0;
+    
     private float _grappleTime = 0;
     private DateTime _timer;
     
@@ -386,7 +389,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 }
                 
                 // Fireball
-                if (Input.GetMouseButtonDown(0) && !_fireballCooldown)
+                if (Input.GetMouseButtonDown(0) && fireballProgress == 0)
                 {
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
@@ -398,7 +401,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     Quaternion rotation = Quaternion.Euler(0, 0, angle);
             
                     Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
-                    StartCoroutine(Fireball());
+                    StartCoroutine(FireballCooldown());
                 }
                 break;
         }
@@ -442,6 +445,22 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _fireballCooldown = false;
     }
 
+    private IEnumerator FireballCooldown()
+    {
+        fireballProgress = 1;
+
+        float sum = 0;
+        
+        while (sum < fireballDuration)
+        {
+            sum += Time.deltaTime;
+            fireballProgress = 1 - Mathf.Clamp01(sum / fireballDuration);
+            yield return null;
+        }
+
+        fireballProgress = 0;
+    }
+    
     private IEnumerator GracePeriod(float t)
     {
         _health.isInvincible = true;
