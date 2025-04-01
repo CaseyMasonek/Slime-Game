@@ -47,6 +47,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float airBlastRadius;
     [SerializeField] private float airBlastForceX;
     [SerializeField] private float airBlastForceY;
+    [SerializeField] private float fireballMaxSize;
+    [SerializeField] private float fireballScaleScale;
     [SerializeField] private GameObject fireball;
     
     private bool _canDash = true;
@@ -55,6 +57,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private bool _fireballCooldown = false;
     private bool _canMelee = true;
     private bool _isGroundPounding = false;
+    private float _fireballChargeUp;
     
     [SerializeField] private float airBlastDuration = .4f;
     public float airBlastProgress = 0;
@@ -137,11 +140,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         
         if (Input.GetKeyDown(KeyCode.Space)) {
             OnJump?.Invoke();
-        }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            OnAttack?.Invoke();
         }
         
         switch (element)
@@ -389,7 +387,18 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 }
                 
                 // Fireball
-                if (Input.GetMouseButtonDown(0) && fireballProgress == 0)
+                if (Input.GetMouseButtonDown(0))
+                {
+                    _fireballChargeUp = 0;
+                }
+
+                if (Input.GetMouseButton(0))
+                {
+                    // Increase charge while holding down LMB unless it reaches its max size
+                    _fireballChargeUp = _fireballChargeUp > fireballMaxSize ? fireballMaxSize : _fireballChargeUp + Time.deltaTime;
+                }                
+                
+                if (Input.GetMouseButtonUp(0) && fireballProgress == 0)
                 {
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
@@ -400,7 +409,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
                     Quaternion rotation = Quaternion.Euler(0, 0, angle);
             
-                    Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
+                    GameObject fb = Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
+                    fb.transform.localScale = Vector3.one * _fireballChargeUp * fireballScaleScale;
+                    
                     StartCoroutine(FireballCooldown());
                 }
                 break;

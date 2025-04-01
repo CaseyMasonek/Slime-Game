@@ -103755,6 +103755,14 @@ PrefabInstance:
       propertyPath: orthographic size
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6596756170012432474, guid: c5b936fcba6f54570bc9180bda610074, type: 3}
+      propertyPath: fireballMaxSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6596756170012432474, guid: c5b936fcba6f54570bc9180bda610074, type: 3}
+      propertyPath: fireballScaleScale
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8286146849874730171, guid: c5b936fcba6f54570bc9180bda610074, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1

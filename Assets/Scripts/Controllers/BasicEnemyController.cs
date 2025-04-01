@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 
 [RequireComponent(typeof(Direction),typeof(Ground))]
-public class BasicEnemyController : MonoBehaviour, IMovementController
+public class BasicEnemyController : MonoBehaviour, IMovementController, IAttackController
 {
     public Element element;
     public bool stunned = false;
@@ -12,7 +13,8 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     [SerializeField] private float moveSpeed;
     [SerializeField] private float flipThreshold;
     [SerializeField] private float ledgeDistance;
-
+    [SerializeField] private float attackCooldown;
+    
     private Direction _direction;
     private Ground _ground;
 	private Rigidbody2D _body;
@@ -20,17 +22,23 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
     private Collider2D _collider;
     
     private bool _canFlip = false;
-    
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            collision.gameObject.GetComponent<Health>().TakeDamage(1);
-        }
-    }
+
+    public event Action OnAttack;
+
+    // Old attack "logic"
+    //
+    // private void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         collision.gameObject.GetComponent<Health>().TakeDamage(1);
+    //     }
+    // }
     
     private void Start()
     {
+        StartCoroutine(Attack());
+        
         _collider = GetComponent<Collider2D>();
         _direction = GetComponent<Direction>();
         _body = GetComponent<Rigidbody2D>();
@@ -90,5 +98,13 @@ public class BasicEnemyController : MonoBehaviour, IMovementController
         yield return new WaitForSeconds(t);
         transform.position -= Vector3.forward;
         stunned = false;
+    }
+
+    public IEnumerator Attack()
+    {
+        if (stunned) yield break;
+        yield return new WaitForSeconds(attackCooldown);
+        OnAttack?.Invoke();
+        StartCoroutine(Attack());
     }
 }

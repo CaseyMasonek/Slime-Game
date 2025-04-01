@@ -14,12 +14,12 @@ GameObject:
   - component: {fileID: 295736337918814164}
   - component: {fileID: 5577361310137702216}
   - component: {fileID: 7772418094093507195}
-  - component: {fileID: 7204342411523724768}
   - component: {fileID: -7881434204221853795}
   - component: {fileID: -4957658668432585883}
   - component: {fileID: -3765628182696429342}
   - component: {fileID: 8273445754605225109}
   - component: {fileID: 5613114619850066446}
+  - component: {fileID: 7625706418658132462}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -163,23 +163,7 @@ MonoBehaviour:
   moveSpeed: 5
   flipThreshold: 0
   ledgeDistance: 0.6
---- !u!114 &7204342411523724768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1347933387985539520}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e00494185980e8e43acfea282ef378d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxSpeed: 11.9
-  _maxAcceleration: 7.7
-  _maxAirAcceleration: 0.9
-  _maxDeceleration: 100
-  _maxAirDeceleration: 40
+  attackCooldown: 1.5
 --- !u!114 &-7881434204221853795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,6 +345,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7625706418658132462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347933387985539520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf2cc04ac077749e999acd24b99b9fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meleeForce: {x: 3, y: 2}
+  attackOffset: {x: 0, y: 0}
+  attackSize: {x: 2, y: 2}
 --- !u!1 &5208859788715366315
 GameObject:
   m_ObjectHideFlags: 0
