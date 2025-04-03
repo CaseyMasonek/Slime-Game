@@ -47,9 +47,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float airBlastRadius;
     [SerializeField] private float airBlastForceX;
     [SerializeField] private float airBlastForceY;
+    [SerializeField] private float fireballInitialSize;
     [SerializeField] private float fireballMaxSize;
     [SerializeField] private float fireballScaleScale;
     [SerializeField] private GameObject fireball;
+    [SerializeField] private float vineHookSpeed;
+    
     
     private bool _canDash = true;
     private bool _isGrappling = false;
@@ -396,6 +399,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 {
                     // Increase charge while holding down LMB unless it reaches its max size
                     _fireballChargeUp = _fireballChargeUp > fireballMaxSize ? fireballMaxSize : _fireballChargeUp + Time.deltaTime;
+                    if (_fireballChargeUp < fireballInitialSize) _fireballChargeUp = fireballInitialSize;
                 }                
                 
                 if (Input.GetMouseButtonUp(0) && fireballProgress == 0)
