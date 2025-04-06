@@ -292,10 +292,15 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     {
                         _grappleTime = 0;
                         
+                        Vector2 direction = (hit.collider.gameObject.transform.position - transform.position);
+                        
+                        _body.AddForce(direction * hookForce, ForceMode2D.Impulse);
+                        
+                        _lineRenderer.enabled = true;
+                        
                         // Create joint
                         _isGrappling = true;
                         
-                        _lineRenderer.enabled = true;
                         
                         GameObject anchor =  new GameObject("Grappling Hook Anchor");
                         
@@ -303,15 +308,15 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         
                         anchor.transform.position = hit.point;
                         Rigidbody2D rb = anchor.AddComponent(typeof(Rigidbody2D)) as Rigidbody2D;
-
+                        
                         if (hit.collider.gameObject.CompareTag("Enemy"))
                         {
                             anchor.transform.SetParent(hit.collider.transform);
                         }
-
+                        
                         rb.constraints = RigidbodyConstraints2D.FreezeAll;
                         
-                        _joint.enabled = true;
+                        //_joint.enabled = true;
                         _joint.connectedBody = rb;
                     }
                 }
@@ -331,7 +336,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     // Break vine if block in the way
                     RaycastHit2D hit = Physics2D.Raycast( transform.position, (new Vector3(anchor.transform.position.x,anchor.transform.position.y,0) - transform.position).normalized );
-
+                
                     if (new Vector3(hit.point.x,hit.point.y,0) != anchor.transform.position && !hit.collider.CompareTag("Enemy"))
                     {
                         _lineRenderer.enabled = false;
