@@ -384,19 +384,21 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (_canDash && Input.GetMouseButtonDown(1))
                 {
                     // Check if nothing's in the way
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * _direction.AsSign());
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right * _direction.AsSign(),Mathf.Infinity,LayerMask.GetMask("Ground"));
 
-                    if (hit.distance > fireDashDistance) // if not then dash
-                    {
-                        // Play particles
-                        ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
-                        particles.Play();
-                        
-                        // Dash
-                        transform.position += Vector3.right * _direction.AsSign() * fireDashDistance;
-                        
-                        _canDash = false;
-                    }
+                    float distance = fireDashDistance;
+                    
+                    if (hit.distance < fireDashDistance) distance = hit.distance;
+                    
+                    // Play particles
+                    ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
+                    particles.Play();
+                    
+                    // Dash
+                    transform.position += Vector3.right * _direction.AsSign() * (distance - .1f);
+                    
+                    _canDash = false;
+                    
                     
                 }
                 
