@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4133495742481449649}
   - component: {fileID: 6007146474998644418}
   - component: {fileID: 2055358632319575842}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Homing bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}

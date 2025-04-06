@@ -105,8 +105,6 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             other.velocity = Vector2.zero;
 
             StartCoroutine(collision.gameObject.GetComponent<BasicEnemyController>().Stun(1));
-
-            _health.Heal(1);
             
             var direction = 1;
             if (collision.gameObject.transform.position.x < transform.position.x) direction = -1;
