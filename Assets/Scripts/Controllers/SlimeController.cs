@@ -70,6 +70,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
     private float _grappleTime = 0;
     private DateTime _timer;
+
+    private GameObject _fireball;
     
     public Vector2 attackOffset;
     public Vector2 attackSize = new Vector2(1, 2);
@@ -399,32 +401,53 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 }
                 
                 // Fireball
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0) && fireballProgress == 0)
                 {
                     _fireballChargeUp = 0;
-                }
-
-                if (Input.GetMouseButton(0))
-                {
-                    // Increase charge while holding down LMB unless it reaches its max size
-                    _fireballChargeUp = _fireballChargeUp > fireballMaxSize ? fireballMaxSize : _fireballChargeUp + Time.deltaTime;
-                    if (_fireballChargeUp < fireballInitialSize) _fireballChargeUp = fireballInitialSize;
-                }                
-                
-                if (Input.GetMouseButtonUp(0) && fireballProgress == 0)
-                {
+                    
+                    // Get direction
                     Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
                     
                     RaycastHit2D hit = Physics2D.Raycast(transform.position, directionVector);
-                    if (hit.distance < 1) return;
+                    if (hit.distance < 1) return; // If fireball too close to a wall, destroy it;
                     
                     float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
                     Quaternion rotation = Quaternion.Euler(0, 0, angle);
-            
-                    GameObject fb = Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
-                    fb.transform.localScale = Vector3.one * _fireballChargeUp * fireballScaleScale;
                     
+                    _fireball = Instantiate(fireball, transform.position + new Vector3(directionVector.x,directionVector.y,0), rotation);
+                    _fireball.GetComponent<BulletMove>().enabled = false;
+                    
+                    _fireball.transform.localScale =  _fireballChargeUp * fireballScaleScale * Vector3.one;
+                    _fireball.GetComponent<Rigidbody2D>().isKinematic = true;
+                    
+                    _fireball.transform.SetParent(transform);
+                }
+
+                if (Input.GetMouseButton(0) && fireballProgress == 0)
+                {
+                    // Increase charge while holding down LMB unless it reaches its max size
+                    _fireballChargeUp = _fireballChargeUp > fireballMaxSize ? fireballMaxSize : _fireballChargeUp + Time.deltaTime;
+                    if (_fireballChargeUp < fireballInitialSize) _fireballChargeUp = fireballInitialSize;
+                    
+                    _fireball.transform.localScale = _fireballChargeUp * fireballScaleScale * Vector3.one;
+                    
+                    // Get direction
+                    Vector2 worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
+                    Vector2 directionVector = (worldPoint - (Vector2)transform.position).normalized;
+                    
+                    float angle = Mathf.Atan2(directionVector.y, directionVector.x) * Mathf.Rad2Deg;
+                    Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                    
+                    _fireball.transform.rotation = rotation;
+                    _fireball.transform.position = transform.position + new Vector3(directionVector.x,directionVector.y,0);
+                }                
+                
+                if (Input.GetMouseButtonUp(0) && fireballProgress == 0)
+                {
+                    _fireball.GetComponent<Rigidbody2D>().isKinematic = false;
+                    _fireball.GetComponent<BulletMove>().enabled = true;              
+                        
                     StartCoroutine(FireballCooldown());
                 }
                 break;

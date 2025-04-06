@@ -458,3 +458,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entity: {fileID: 1347933387985539520}
+  yScale: 0.2
