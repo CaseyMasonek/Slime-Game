@@ -253,24 +253,28 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     if (!collider) return;
                     
                     float damage = 1;
-                    switch (collider.GetComponent<BasicEnemyController>().element)
+                    if (collider.GetComponent<BasicEnemyController>() != null)
                     {
-                        case Element.Air:
-                            damage = 1f;
-                            break;
-                        case Element.Water:
-                            damage = .2f;
-                            break;
-                        case Element.Earth:
-                            damage = 1.3f;
-                            break;
-                        case Element.Fire:
-                            damage = 2f;
-                            break;
-                        case Element.None:
-                            damage = 1f;
-                            break;
+                        switch (collider.GetComponent<BasicEnemyController>().element)
+                        {
+                            case Element.Air:
+                                damage = 1f;
+                                break;
+                            case Element.Water:
+                                damage = .2f;
+                                break;
+                            case Element.Earth:
+                                damage = 1.3f;
+                                break;
+                            case Element.Fire:
+                                damage = 2f;
+                                break;
+                            case Element.None:
+                                damage = 1f;
+                                break;
+                        }
                     }
+                    
                     collider.GetComponent<Health>().TakeDamage(damage);
                     
                     collider.GetComponent<Rigidbody2D>().AddForce(meleeForce * _direction.AsSign(), ForceMode2D.Impulse);

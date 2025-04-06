@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 public class HealthBar : MonoBehaviour
 {
     [SerializeField] private GameObject entity;
+    [SerializeField] private float yScale = .1f;
     private Health _health;
 
     private float _originalX;
@@ -23,6 +24,6 @@ public class HealthBar : MonoBehaviour
     private void Update()
     {
         float width = _health.health / _health.maxHealth;
-        transform.localScale = new Vector3(_originalX * width, 0.1f,0);
+        transform.localScale = new Vector3(_originalX * width,yScale,0);
     }
 }
