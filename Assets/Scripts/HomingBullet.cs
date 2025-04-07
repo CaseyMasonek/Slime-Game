@@ -25,7 +25,7 @@ public class HomingBullet : MonoBehaviour
     {
         if (_isHoming)
         {
-            // For the first three seconds, follow the player
+            // For the first few seconds, follow the player
             _prevPos = transform.position;
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, movementSpeed * Time.deltaTime);
             _newPos = transform.position;

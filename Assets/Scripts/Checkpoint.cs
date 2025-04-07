@@ -13,6 +13,9 @@ public class Checkpoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        _die.SetCheckpoint(transform.position);
+        if (other.CompareTag("Player"))
+        {
+            _die.SetCheckpoint(transform.position);
+        }
     }
 }
