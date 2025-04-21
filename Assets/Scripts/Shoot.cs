@@ -7,6 +7,7 @@ using UnityEngine;
 public class Shoot : MonoBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private float projectileSpawnDistance = 1;
     
     private IAttackController _controller;
     private Direction _direction;
@@ -29,6 +30,6 @@ public class Shoot : MonoBehaviour
 
     private void AttackAction()
     {
-        Instantiate(projectilePrefab, transform.position + (Vector3.right * _direction.AsSign() * 2), Quaternion.identity);
+        Instantiate(projectilePrefab, transform.position + (Vector3.right * _direction.AsSign() * projectileSpawnDistance), Quaternion.identity);
     }
 }
