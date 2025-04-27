@@ -13,7 +13,7 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
-        _die = GetComponent<IDieController>();
+        _die = gameObject.GetComponent<IDieController>();
     }
 
     public void TakeDamage(float damage)

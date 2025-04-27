@@ -36,7 +36,7 @@ public class Explode : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            _player.GetComponent<Health>().TakeDamage(1);
+            other.gameObject.GetComponent<Health>().TakeDamage(1);
             Destroy(gameObject);
         }
     }

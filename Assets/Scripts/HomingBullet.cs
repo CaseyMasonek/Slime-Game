@@ -44,7 +44,7 @@ public class HomingBullet : MonoBehaviour
             other.gameObject.GetComponent<Health>().TakeDamage(1);
         }
 
-        Instantiate(explosion);
+        Instantiate(explosion,transform.position,Quaternion.identity);
         
         Destroy(gameObject);
     }
