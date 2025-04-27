@@ -14,6 +14,8 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
     
     private bool _barrage;
     [SerializeField] private float barrageDuration;
+
+    [SerializeField] private GameObject gasterBlaster;
     
     public event Action OnAttack;
 
@@ -56,7 +58,7 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
     private IEnumerator AttackLoop()
     {
         var r = new Random();
-        var move = r.Next(0, 1);
+        var move = r.Next(0, 2);
 
         switch (move)
         {
@@ -70,8 +72,11 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
                 break;
             
             case 1:
-                Debug.Log("Move 2");
-                yield return new WaitForSeconds(cooldown);
+                // Gaster blaster
+                
+                Instantiate(gasterBlaster, _player.transform.position, Quaternion.identity);
+                
+                yield return new WaitForSeconds(cooldown/3);
                 break;
         }
         
