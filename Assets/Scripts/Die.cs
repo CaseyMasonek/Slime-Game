@@ -35,14 +35,15 @@ public class Die : MonoBehaviour, IDieController
 
     public void OnTakeDamage()
     {
-        Debug.Log("OnTakeDamage");
+        if (health.isInvincible) return;
+        health.isInvincible = true;
         StartCoroutine(GracePeriod());
     }
 
     private IEnumerator GracePeriod()
     {
-        health.isInvincible = true;
         yield return new WaitForSeconds(gracePeriod);
         health.isInvincible = false;
+        Debug.Log("no IFrames");
     }
 }

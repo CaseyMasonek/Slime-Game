@@ -22,14 +22,17 @@ public class EnemyDie : MonoBehaviour, IDieController
 
     private IEnumerator Die()
     {
-        AudioSource audio = GetComponent<AudioSource>();
-        audio.Play();
-
-        while (audio.isPlaying)
+        if (GetComponent<AudioSource>())
         {
-            yield return null;
+            var audio = GetComponent<AudioSource>();
+            audio.Play();
+            
+            while (audio.isPlaying)
+            {
+                yield return null;
+            }
         }
-        
+
         Destroy(gameObject);
     }
     

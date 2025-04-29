@@ -54,7 +54,7 @@ public class Ground : MonoBehaviour
         for (int i = 0; i < collision.contactCount; i++)
         {
             Vector2 normal = collision.GetContact(i).normal;
-            if (normal.y >= 0.9f)
+            if (Mathf.Approximately(normal.y, 1f))
             {
                 ground = collision.transform;
             }
