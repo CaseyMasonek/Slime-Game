@@ -7,6 +7,8 @@ public class HomingBullet : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private float homingTime = 3;
+
+    [SerializeField] private GameObject explosion; 
     
     private GameObject _player;
     private bool _isHoming;
@@ -41,6 +43,9 @@ public class HomingBullet : MonoBehaviour
         {
             other.gameObject.GetComponent<Health>().TakeDamage(1);
         }
+
+        Instantiate(explosion,transform.position,Quaternion.identity);
+        
         Destroy(gameObject);
     }
 

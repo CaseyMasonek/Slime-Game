@@ -7,17 +7,20 @@ public class Health : MonoBehaviour
 {
     public float health;
     public float maxHealth;
-    public bool isInvincible = false;
+    public volatile bool isInvincible = false;
 
     private IDieController _die;
 
     private void Start()
     {
-        _die = GetComponent<IDieController>();
+        _die = gameObject.GetComponent<IDieController>();
     }
 
     public void TakeDamage(float damage)
     {
+        Debug.Log("Is invincible: " + isInvincible);
+        
+        
         if (isInvincible) return;
         
         health -= damage;
@@ -29,7 +32,7 @@ public class Health : MonoBehaviour
             health = 0;
         }
     }
-
+    
     public void Heal(float amount, bool overheal = false)
     {
         health += amount;

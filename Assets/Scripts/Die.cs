@@ -10,9 +10,14 @@ public class Die : MonoBehaviour, IDieController
     public static Vector3 Checkpoint = Vector3.zero;
     
     [SerializeField] float gracePeriod = 0;
-    
-    private Health Health => GetComponent<Health>();
 
+    private Health health;
+
+    private void Start()
+    {
+        health = GetComponent<Health>();
+    }
+    
     public void SetCheckpoint(Vector3 checkpoint)
     {
         Checkpoint = checkpoint;
@@ -30,13 +35,15 @@ public class Die : MonoBehaviour, IDieController
 
     public void OnTakeDamage()
     {
+        if (health.isInvincible) return;
+        health.isInvincible = true;
         StartCoroutine(GracePeriod());
     }
 
     private IEnumerator GracePeriod()
     {
-        Health.isInvincible = true;
         yield return new WaitForSeconds(gracePeriod);
-        Health.isInvincible = false;
+        health.isInvincible = false;
+        Debug.Log("no IFrames");
     }
 }
