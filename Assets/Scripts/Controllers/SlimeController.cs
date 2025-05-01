@@ -81,7 +81,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 		_body = gameObject.GetComponent<Rigidbody2D>();
         _ground = gameObject.GetComponent<Ground>();
         _direction = GetComponent<Direction>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
         _jump = GetComponent<Jump>();
         _lineRenderer = GetComponent<LineRenderer>();
         _joint = GetComponent<DistanceJoint2D>();
