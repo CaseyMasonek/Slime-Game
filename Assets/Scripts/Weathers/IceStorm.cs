@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-    
-public class HeatWave : WeatherEvent
+
+public class IceStorm : WeatherEvent
 {
-    public override string EventName { get; } = "Heat Wave";
-    public override string Description { get; set;  } = "Non-fire horizontal movement debuff";
+    public override string EventName { get; } = "Ice Storm";
+    public override string Description { get; set; } = "All horizontal movement debuffed (especially water and air)";
     
-    [SerializeField] private float speedDebuff = 0.5f;
+    [SerializeField] private float normalDebuff = 0.75f;
+    [SerializeField] private float extraDebuff = 0.5f;
     
     // Start is called before the first frame update
     private GameObject _player;
@@ -22,13 +22,13 @@ public class HeatWave : WeatherEvent
     // Update is called once per frame
     void Update()
     {
-        if (_slime.element != Element.Fire)
+        if (_slime.element == Element.Air || _slime.element == Element.Water)
         {
-            _slime.movementScale = speedDebuff; 
+            _slime.movementScale = extraDebuff; 
         }
         else
         {
-            _slime.movementScale = 1;
+            _slime.movementScale = normalDebuff;
         }
     }
 

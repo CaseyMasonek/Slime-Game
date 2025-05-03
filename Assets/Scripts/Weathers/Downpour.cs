@@ -5,7 +5,7 @@ using UnityEngine;
 public class Downpour : WeatherEvent
 {
     public override string EventName { get; } = "Downpour";
-    public override string Description { get; } = "Non-water aerial movement debuff";
+    public override string Description { get; set; } = "Non-water aerial movement debuff";
     
     [SerializeField] private float debuff = 1.5f;
     
