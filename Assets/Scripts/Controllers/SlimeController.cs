@@ -416,8 +416,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
                     particles.Play();
                     
+                    _animator.SetTrigger("Dash");
+                    
                     // Dash
                     transform.position += Vector3.right * _direction.AsSign() * (distance - .1f);
+                    
                     
                     _canDash = false;
                     
