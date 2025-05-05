@@ -26,6 +26,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private LineRenderer _lineRenderer;
     private DistanceJoint2D _joint;
     private Health _health; 
+    private Animator _animator;
+
+    private GameObject _sprite;
            
     private Camera _camera;
     
@@ -78,14 +81,17 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     
 	private void Start()
 	{
+        _sprite = transform.GetChild(0).gameObject;
+        
 		_body = gameObject.GetComponent<Rigidbody2D>();
         _ground = gameObject.GetComponent<Ground>();
         _direction = GetComponent<Direction>();
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = transform.GetComponentInChildren<SpriteRenderer>();
         _jump = GetComponent<Jump>();
         _lineRenderer = GetComponent<LineRenderer>();
         _joint = GetComponent<DistanceJoint2D>();
         _health = GetComponent<Health>();
+        _animator = _sprite.GetComponent<Animator>();
         
         _camera = Camera.main;
 	}
@@ -119,24 +125,42 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) element = Element.Air;
-        if (Input.GetKeyDown(KeyCode.Alpha2)) element = Element.Water;
-        if (Input.GetKeyDown(KeyCode.Alpha3)) element = Element.Earth;
-        if (Input.GetKeyDown(KeyCode.Alpha4)) element = Element.Fire;
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            element = Element.Air; 
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            element = Element.Water;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            element = Element.Earth;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            element = Element.Fire;
+        }
         
         switch (element)
         {
             case Element.Air:
                 _body.mass = .3f;
+                _animator.SetTrigger("Air");
                 break;
             case Element.Water:
                 _body.mass = 1;
+                _animator.SetTrigger("Water");
                 break;
             case Element.Earth:
                 _body.mass = 4;
+                _animator.SetTrigger("Earth");
                 break;
             case Element.Fire:
                 _body.mass = 1;
+                _animator.SetTrigger("Fire");
                 if (_ground.inWater) _health.TakeDamage(fireWaterDamage * Time.deltaTime);
                 break;
         }
@@ -392,8 +416,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
                     particles.Play();
                     
+                    _animator.SetTrigger("Dash");
+                    
                     // Dash
                     transform.position += Vector3.right * _direction.AsSign() * (distance - .1f);
+                    
                     
                     _canDash = false;
                     

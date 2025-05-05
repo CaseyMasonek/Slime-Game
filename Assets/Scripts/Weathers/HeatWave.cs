@@ -6,7 +6,7 @@ using UnityEngine;
 public class HeatWave : WeatherEvent
 {
     public override string EventName { get; } = "Heat Wave";
-    public override string Description { get; } = "Non-fire horizontal movement debuff";
+    public override string Description { get; set;  } = "Non-fire horizontal movement debuff";
     
     [SerializeField] private float speedDebuff = 0.5f;
     

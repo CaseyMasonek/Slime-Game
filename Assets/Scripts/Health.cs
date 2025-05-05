@@ -33,6 +33,12 @@ public class Health : MonoBehaviour
         }
     }
     
+    private void Update() {
+        if (transform.position.y < -1000) {
+            _die.OnDie();
+        }
+    }
+    
     public void Heal(float amount, bool overheal = false)
     {
         health += amount;

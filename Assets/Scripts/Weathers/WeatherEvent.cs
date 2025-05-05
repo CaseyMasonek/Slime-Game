@@ -5,5 +5,5 @@ using UnityEngine;
 public abstract class WeatherEvent : MonoBehaviour
 {
     public abstract string EventName { get; }
-    public abstract string Description { get; }
+    public abstract string Description { get; set; }
 }
