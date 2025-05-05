@@ -9,10 +9,13 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D),typeof(Ground),typeof(Direction))]
 public class SlimeController : MonoBehaviour, IMovementController, IJumpController
 {
-    // Public variables
-	public Element element = Element.Air;
-
+    private static List<Element> _elements = new List<Element>();
+    private int _index;
+    
+    public Element element { get { return _elements[_index]; } }
+    
     public float movementScale = 1;
+    
     // Actions from interfaces
     public event Action OnJump;
     public event Action OnAttack;
@@ -94,8 +97,19 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _animator = _sprite.GetComponent<Animator>();
         
         _camera = Camera.main;
+
+        if (_elements.Count == 0)
+        {
+            _elements.Add(Element.Water);
+        }
 	}
 
+
+    public void CollectElement(Element el)
+    {
+        _elements.Add(el);
+    }
+    
     public float GetMovement()
     {
         return Input.GetAxis("Horizontal") * movementScale;
@@ -127,21 +141,21 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            element = Element.Air; 
+            _index = 0;
         }
         
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            element = Element.Water;
+            _index = _elements.Count >= 2 ? 1 : 0;
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            element = Element.Earth;
+            _index = _elements.Count >= 3 ? 2 : 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            element = Element.Fire;
+            _index = _elements.Count >= 4 ? 3 : 0;
         }
         
         switch (element)
@@ -187,40 +201,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         
         if (Input.GetAxis("Mouse ScrollWheel") > 0f ) // forward
         {
-            switch (element)
-            {
-                case Element.Air:
-                    element = Element.Water;
-                    break;
-                case Element.Water:
-                    element = Element.Earth;
-                    break;
-                case Element.Earth:
-                    element = Element.Fire;
-                    break;
-                case Element.Fire:
-                    element = Element.Air;
-                    break;
-            }
+            _index = _index + 1 >= _elements.Count ? 0 : _index + 1;
         }
         
         if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // backward
         {
-            switch (element)
-            {
-                case Element.Earth:
-                    element = Element.Water;
-                    break;
-                case Element.Fire:
-                    element = Element.Earth;
-                    break;
-                case Element.Air:
-                    element = Element.Fire;
-                    break;
-                case Element.Water:
-                    element = Element.Air;
-                    break;
-            }
+            _index = _index - 1 <= 0 ? _elements.Count - 1 : _index - 1;
         }
         
         if (_ground.onGround)
