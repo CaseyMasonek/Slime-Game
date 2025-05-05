@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class Boss : WeatherEvent
 {
-    public override string EventName { get; } = "The Weatherman";
-    public override string Description { get; set; } = "Brace yourself";
+    public override string EventName { get; } = "Bossfight";
+    public override string Description { get; set; } = "Good Luck.";
 
     [SerializeField] private GameObject pref;
-    [SerializeField] private Vector3 pos = new Vector3(-40,-21);
+    [SerializeField] private Vector3 pos = new Vector3(40,35);
     
     void Start()
     {

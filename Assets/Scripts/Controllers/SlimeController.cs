@@ -107,7 +107,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     public void CollectElement(Element el)
     {
-        _elements.Add(el);
+        if (!_elements.Contains(el)) _elements.Add(el);
     }
     
     public float GetMovement()
@@ -182,6 +182,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         if (Input.GetKeyDown(KeyCode.Space)) {
             OnJump?.Invoke();
         }
+
+        _sprite.GetComponent<SpriteRenderer>().flipX = _direction.AsSign() != 1;
         
         switch (element)
         {
@@ -206,7 +208,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         
         if (Input.GetAxis("Mouse ScrollWheel") < 0f ) // backward
         {
-            _index = _index - 1 <= 0 ? _elements.Count - 1 : _index - 1;
+            _index = _index - 1 < 0 ? _elements.Count - 1: _index - 1;
         }
         
         if (_ground.onGround)

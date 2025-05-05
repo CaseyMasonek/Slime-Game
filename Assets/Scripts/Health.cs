@@ -34,7 +34,7 @@ public class Health : MonoBehaviour
     }
     
     private void Update() {
-        if (transform.position.y < -1000) {
+        if (transform.position.y < -100) {
             _die.OnDie();
         }
     }
