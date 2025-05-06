@@ -94111,7 +94111,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2482049305420181226, guid: fd0cfc1a354854fec8959eb23221ca00, type: 3}
       propertyPath: m_LocalScale.x
-      value: 9.358549
+      value: 14.759368
       objectReference: {fileID: 0}
     - target: {fileID: 2482049305420181226, guid: fd0cfc1a354854fec8959eb23221ca00, type: 3}
       propertyPath: m_LocalScale.y
@@ -94119,7 +94119,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2482049305420181226, guid: fd0cfc1a354854fec8959eb23221ca00, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 59.7367
+      value: 57.0361
       objectReference: {fileID: 0}
     - target: {fileID: 2482049305420181226, guid: fd0cfc1a354854fec8959eb23221ca00, type: 3}
       propertyPath: m_LocalPosition.y
@@ -94161,6 +94161,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weather Change Trigger (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7644183309981075155, guid: fd0cfc1a354854fec8959eb23221ca00, type: 3}
+      propertyPath: weatherEvent
+      value: 
+      objectReference: {fileID: -1848250863621268204, guid: 0b96d17f92d50a14ca452fee9970f61c, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
