@@ -4,9 +4,9 @@ using UnityEngine;
 
 public enum Element
 {
-    Air,
     Water,
-    Earth,
     Fire,
+    Earth,
+    Air,
     None
 }

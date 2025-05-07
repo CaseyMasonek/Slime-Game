@@ -30,6 +30,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private DistanceJoint2D _joint;
     private Health _health; 
     private Animator _animator;
+    private AudioSource _audioSource;
+    private Move _move;
 
     private GameObject _sprite;
            
@@ -82,6 +84,13 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     public Vector2 attackOffset;
     public Vector2 attackSize = new Vector2(1, 2);
     
+    [SerializeField] private AudioClip waterIdleSfx;
+    [SerializeField] private AudioClip waterAttackSfx;
+    [SerializeField] private AudioClip fireIdleSfx;
+    [SerializeField] private AudioClip grappleSfxSfx;
+    [SerializeField] private AudioClip[] walkSfxs;
+    [SerializeField] private float walkSfxCooldown;
+    
 	private void Start()
 	{
         _sprite = transform.GetChild(0).gameObject;
@@ -95,6 +104,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _joint = GetComponent<DistanceJoint2D>();
         _health = GetComponent<Health>();
         _animator = _sprite.GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        _move = GetComponent<Move>();
         
         _camera = Camera.main;
 
@@ -102,7 +113,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         {
             _elements.Add(Element.Water);
         }
-	}
+
+        StartCoroutine(WalkSounds());
+    }
 
 
     public void CollectElement(Element el)
@@ -135,6 +148,16 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         }
         _isGroundPounding = false;
         _health.isInvincible = false;
+    }
+
+    private IEnumerator WalkSounds()
+    {
+        if (_move.IsWalking())
+        {
+            _audioSource.PlayOneShot(walkSfxs[(int)element]);
+        }
+        yield return new WaitForSeconds(walkSfxCooldown);
+        StartCoroutine(WalkSounds());
     }
 
     private void Update()
@@ -178,6 +201,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (_ground.inWater) _health.TakeDamage(fireWaterDamage * Time.deltaTime);
                 break;
         }
+        //
+        // if (_move.IsWalking() && !_audioSource.isPlaying)
+        // {
+        //     _audioSource.loop = true;
+        //     _audioSource.PlayOneShot(walkSfxs[(int)element]);
+        // }
         
         if (Input.GetKeyDown(KeyCode.Space)) {
             OnJump?.Invoke();
@@ -258,6 +287,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 // Melee attack
                 if (Input.GetMouseButtonDown(0) && _canMelee)
                 {
+                    _audioSource.PlayOneShot(waterAttackSfx);
                     
                     LayerMask layerMask = LayerMask.GetMask("Enemy");
                     float k = _direction?.AsSign() ?? 1;

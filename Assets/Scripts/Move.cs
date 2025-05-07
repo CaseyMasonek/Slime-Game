@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(IMovementController), typeof(Rigidbody2D))]
@@ -14,7 +15,11 @@ public class Move : MonoBehaviour
     private Rigidbody2D _body;
     private Ground _ground;
     private Direction _direction;
-
+    
+    public bool IsWalking() {
+        return MathF.Abs(_body.velocity.x) > 0.1f && _ground.onGround;
+    }
+    
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
