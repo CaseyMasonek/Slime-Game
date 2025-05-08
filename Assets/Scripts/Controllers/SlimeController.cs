@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Random = Unity.Mathematics.Random;
 
 [RequireComponent(typeof(Rigidbody2D),typeof(Ground),typeof(Direction))]
 public class SlimeController : MonoBehaviour, IMovementController, IJumpController
@@ -87,8 +88,15 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private AudioClip waterIdleSfx;
     [SerializeField] private AudioClip waterAttackSfx;
     [SerializeField] private AudioClip fireIdleSfx;
-    [SerializeField] private AudioClip grappleSfxSfx;
+    [SerializeField] private AudioClip fireballChargeSfx;
+    [SerializeField] private AudioClip fireballReleaseSfx;
+    [SerializeField] private AudioClip grappleSfx;
+    [SerializeField] private AudioClip fireDashSfx;
+    [SerializeField] private AudioClip fallSfx;
+    [SerializeField] private AudioClip landSfx;
+    [SerializeField] private AudioClip windBlastSfx;
     [SerializeField] private AudioClip[] walkSfxs;
+    [SerializeField] private AudioClip[] jumpSfxs;
     [SerializeField] private float walkSfxCooldown;
     
 	private void Start()
@@ -130,6 +138,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (_isGroundPounding)
+        {
+            _audioSource.Stop();
+            _audioSource.PlayOneShot(landSfx);
+        }
+        
         // Ground pound hit enemy logic
         if (collision.gameObject.CompareTag("Enemy") && _isGroundPounding)
         {
@@ -154,7 +168,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     {
         if (_move.IsWalking())
         {
-            _audioSource.PlayOneShot(walkSfxs[(int)element]);
+            _audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            _audioSource.PlayOneShot(walkSfxs[(int)element], 0.5f);
         }
         yield return new WaitForSeconds(walkSfxCooldown);
         StartCoroutine(WalkSounds());
@@ -209,6 +224,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         // }
         
         if (Input.GetKeyDown(KeyCode.Space)) {
+            _audioSource.PlayOneShot(jumpSfxs[(int)element]);
             OnJump?.Invoke();
         }
 
@@ -270,7 +286,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         
                         result.GetComponent<Rigidbody2D>().AddForce((1/distance) * airBlastForceX * direction + airBlastForceY * Vector2.up, ForceMode2D.Impulse);
                     }
-
+                    
+                    _audioSource.PlayOneShot(windBlastSfx);
+                    
                     StartCoroutine(AirBlastCooldown());
                 }
                 
@@ -281,6 +299,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 {
                     _canWallJump = false;
                     _body.AddForce(new Vector2(wallJumpDistance * _ground.wall,wallJumpHeight), ForceMode2D.Impulse);
+                    _audioSource.PlayOneShot(jumpSfxs[(int)element]);
                     StartCoroutine(WallJump());
                 } 
                 
@@ -364,6 +383,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                         
                         //_joint.enabled = true;
                         _joint.connectedBody = rb;
+                        
+                        _audioSource.PlayOneShot(grappleSfx);
                     }
                 }
 
@@ -411,6 +432,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     _timer = DateTime.Now;
                     _isGroundPounding = true;
                     _health.isInvincible = true;
+                    
+                    _audioSource.PlayOneShot(fallSfx);
                 }
 
                 if (_isGroundPounding)
@@ -430,15 +453,11 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     if (hit.distance < fireDashDistance) distance = hit.distance;
                     
-                    // Play particles
-                    ParticleSystem particles = GameObject.Find("Fire particles").GetComponent<ParticleSystem>();
-                    particles.Play();
-                    
                     _animator.SetTrigger("Dash");
                     
                     // Dash
                     transform.position += Vector3.right * _direction.AsSign() * (distance - .1f);
-                    
+                    _audioSource.PlayOneShot(fireDashSfx);
                     
                     _canDash = false;
                     
@@ -467,6 +486,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     _fireball.GetComponent<Rigidbody2D>().isKinematic = true;
                     
                     _fireball.transform.SetParent(transform);
+                    
+                    _audioSource.PlayOneShot(fireballChargeSfx);
                 }
 
                 if (Input.GetMouseButton(0) && fireballProgress == 0)
@@ -491,7 +512,10 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (Input.GetMouseButtonUp(0) && fireballProgress == 0)
                 {
                     _fireball.GetComponent<Rigidbody2D>().isKinematic = false;
-                    _fireball.GetComponent<BulletMove>().enabled = true;              
+                    _fireball.GetComponent<BulletMove>().enabled = true;
+                    
+                    _audioSource.Stop();
+                    _audioSource.PlayOneShot(fireballReleaseSfx);
                         
                     StartCoroutine(FireballCooldown());
                 }
