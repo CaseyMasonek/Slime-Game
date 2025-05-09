@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 8013705812693247068}
   - component: {fileID: 457665924265279845}
   - component: {fileID: 7349770262988065658}
-  - component: {fileID: 4870601945344594583}
+  - component: {fileID: 1729595314185221132}
   m_Layer: 7
   m_Name: Boss
   m_TagString: Enemy
@@ -251,10 +251,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59cf90f3e7eab4a87bdbf0e3b51bd689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 8
-  maxHealth: 8
+  health: 5
+  maxHealth: 5
   isInvincible: 0
---- !u!114 &4870601945344594583
+--- !u!114 &1729595314185221132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -263,7 +263,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3722782818119593563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83fdcd0417125445895c373435309bfe, type: 3}
+  m_Script: {fileID: 11500000, guid: 1464298d92e85a64b9ba80eb175e5120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8248608326495718783

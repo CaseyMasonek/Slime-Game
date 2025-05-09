@@ -34,6 +34,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     private AudioSource _audioSource;
     private Move _move;
 
+    private GameObject _slash;
     private GameObject _sprite;
            
     private Camera _camera;
@@ -114,6 +115,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         _animator = _sprite.GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
         _move = GetComponent<Move>();
+        
+        _slash = GameObject.Find("Slash");
         
         _camera = Camera.main;
 
@@ -307,6 +310,9 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                 if (Input.GetMouseButtonDown(0) && _canMelee)
                 {
                     _audioSource.PlayOneShot(waterAttackSfx);
+                    
+                    _slash.GetComponent<SpriteRenderer>().enabled = true;
+                    _slash.GetComponent<Animator>().enabled = true;
                     
                     LayerMask layerMask = LayerMask.GetMask("Enemy");
                     float k = _direction?.AsSign() ?? 1;
