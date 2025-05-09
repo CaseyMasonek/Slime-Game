@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = System.Random;
 
-public class MinibossController : MonoBehaviour, IMovementController
+public class MinibossController : MonoBehaviour, IMovementController, IJumpController
 {
     [SerializeField] private float cooldown;
     
@@ -14,10 +14,14 @@ public class MinibossController : MonoBehaviour, IMovementController
     private Direction _direction;
     private Animator _animator;
 
+    public event Action OnJump;
+
     private Vector2 attackSize = new Vector2(3, 1);
     private Vector2 attackOffset = new Vector2(2, -2);
+    private Vector2 raycastOffset = new Vector2(2.5f, -1.2f);
+    [SerializeField] private float attackTimeOffset = 1;
     
-    private int _movement;
+    private bool _attacking;
 
     private void Start()
     {
@@ -34,6 +38,25 @@ public class MinibossController : MonoBehaviour, IMovementController
         {
             _direction.Flip();
         }
+        
+        LayerMask mask = LayerMask.GetMask("Ground");
+        float k = _direction?.AsSign() ?? 1;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(raycastOffset.x * k, raycastOffset.y, 0),
+            Vector2.right * _direction.AsSign(), mask);
+
+        Debug.DrawRay(transform.position + new Vector3(raycastOffset.x * k, raycastOffset.y, 0),Vector2.right * _direction.AsSign(),Color.red,3);
+        
+        if (hit.collider != null)
+        {
+            Debug.Log(hit.collider.gameObject.name);
+            
+            if (hit.distance < 2)
+            {
+                Debug.Log(hit.point.ToString());
+                OnJump?.Invoke();
+            }
+        }
+        
     }
 
     public float GetMovement()
@@ -67,9 +90,11 @@ public class MinibossController : MonoBehaviour, IMovementController
 
     private IEnumerator Attack()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(attackTimeOffset);
         
         float k = _direction?.AsSign() ?? 1;
+        
+        _attacking = true;
         
         LayerMask mask = LayerMask.GetMask("Ignore Raycast");
         Collider2D collider =
@@ -78,23 +103,29 @@ public class MinibossController : MonoBehaviour, IMovementController
         
         if (collider != null)
         {
-            Debug.Log(collider.name);
-            
             if (collider.CompareTag("Player"))
             {
-                Debug.Log("what");
                 _player.GetComponent<Health>().TakeDamage(1);
             }
         }
-        
-        _animator.SetTrigger("Attack");
+
+        StartCoroutine(GizmosTimingDebug());
+    }
+
+    private IEnumerator GizmosTimingDebug()
+    {
+        yield return new WaitForSeconds(attackTimeOffset);
+        _attacking = false;
     }
 
     private void OnDrawGizmos()
     {
-        float k = _direction?.AsSign() ?? 1;
+        if (_attacking)
+        {
+            float k = _direction?.AsSign() ?? 1;
         
-        Gizmos.color = Color.red;
-        Gizmos.DrawCube(transform.position + new Vector3(attackOffset.x * k, attackOffset.y, 0), attackSize);
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(transform.position + new Vector3(attackOffset.x * k, attackOffset.y, 0), attackSize);
+        }
     }
 }

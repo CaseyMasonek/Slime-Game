@@ -62,7 +62,7 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
     [SerializeField] private float fireballScaleScale;
     [SerializeField] private GameObject fireball;
     [SerializeField] private float vineHookSpeed;
-    
+    [SerializeField] private float slashLength;
     
     private bool _canDash = true;
     private bool _isGrappling = false;
@@ -313,6 +313,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     
                     _slash.GetComponent<SpriteRenderer>().enabled = true;
                     _slash.GetComponent<Animator>().enabled = true;
+
+                    StartCoroutine(HideSlash());
                     
                     LayerMask layerMask = LayerMask.GetMask("Enemy");
                     float k = _direction?.AsSign() ?? 1;
@@ -581,6 +583,13 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
         }
 
         fireballProgress = 0;
+    }
+
+    private IEnumerator HideSlash()
+    {
+        yield return new WaitForSeconds(slashLength);
+        _slash.GetComponent<SpriteRenderer>().enabled = false;
+        _slash.GetComponent<Animator>().enabled = false;
     }
     
     private IEnumerator GracePeriod(float t)
