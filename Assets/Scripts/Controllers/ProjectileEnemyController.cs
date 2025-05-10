@@ -10,6 +10,7 @@ public class ProjectileEnemyController : MonoBehaviour, IMovementController, IAt
     
     private GameObject _player;
     private Direction _direction;
+    private Animator _animator;
     
     public event Action OnAttack;
 
@@ -17,6 +18,7 @@ public class ProjectileEnemyController : MonoBehaviour, IMovementController, IAt
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _direction = GetComponent<Direction>();
+        _animator = GetComponent<Animator>();
 
         StartCoroutine(Attack());
     }
@@ -33,6 +35,7 @@ public class ProjectileEnemyController : MonoBehaviour, IMovementController, IAt
     {
         if (Vector3.Distance(_player.transform.position, transform.position) < 5)
         {
+            _animator.SetBool("Move",true);
             if (_player.transform.position.x > transform.position.x)
             {
                 return -1; // if the player is to the right, move left
@@ -40,12 +43,16 @@ public class ProjectileEnemyController : MonoBehaviour, IMovementController, IAt
 
             return 1; // otherwise move right
         }
-
-        return 0;
+        else
+        {
+            _animator.SetBool("Move",false);
+            return 0;
+        }
     }
 
     private IEnumerator Attack()
     {
+        _animator.SetTrigger("Attack");
         OnAttack?.Invoke();
         yield return new WaitForSeconds(cooldown);
         StartCoroutine(Attack());
