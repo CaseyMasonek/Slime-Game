@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 457665924265279845}
   - component: {fileID: 7349770262988065658}
   - component: {fileID: 1729595314185221132}
+  - component: {fileID: -4922917187215853097}
   m_Layer: 7
   m_Name: Boss
   m_TagString: Enemy
@@ -83,7 +84,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 264284045, guid: 2e0f07fdb822b364f8f12e37c5530801, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -229,8 +230,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    pivot: {x: 0.5, y: 0.125}
+    oldSize: {x: 4, y: 4}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -266,6 +267,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1464298d92e85a64b9ba80eb175e5120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &-4922917187215853097
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3722782818119593563}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f570f6b63c66c774a8df5ae5d6845798, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8248608326495718783
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +315,7 @@ Transform:
   m_GameObject: {fileID: 8248608326495718783}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.542, z: -0.0059194025}
+  m_LocalPosition: {x: 0, y: 0.63, z: -0.0059194025}
   m_LocalScale: {x: 1, y: 0.013334568, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
