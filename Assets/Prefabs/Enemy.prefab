@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 8273445754605225109}
   - component: {fileID: 5613114619850066446}
   - component: {fileID: 7625706418658132462}
+  - component: {fileID: 1764566361860832509}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -84,7 +85,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: 1533919548, guid: e3a16269a1d0c98419b4a44e980ba340, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -240,7 +241,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 4, y: 4}
     newSize: {x: 2.5, y: 2.8}
     adaptiveTilingThreshold: 0.4
     drawMode: 2
@@ -360,6 +361,27 @@ MonoBehaviour:
   meleeForce: {x: 3, y: 2}
   attackOffset: {x: 0, y: 0}
   attackSize: {x: 2, y: 2}
+--- !u!95 &1764566361860832509
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347933387985539520}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c1c540a0ab4e2fd4883978a750b5b7bc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5208859788715366315
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,7 +409,7 @@ Transform:
   m_GameObject: {fileID: 5208859788715366315}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0034005172, y: 0, z: -0, w: 0.9999942}
-  m_LocalPosition: {x: 0, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0.002}
   m_LocalScale: {x: 2.55, y: 0.2, z: 1.0000309}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -11,6 +11,7 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
     
     private GameObject _player;
     private Direction _direction;
+    private Animator _animator;
     
     private bool _barrage;
     [SerializeField] private float barrageDuration;
@@ -23,6 +24,7 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _direction = GetComponent<Direction>();
+        _animator = GetComponent<Animator>();
 
         StartCoroutine(AttackLoop());
     }
@@ -73,8 +75,9 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
             
             case 1:
                 // Gaster blaster
+                _animator.SetTrigger("Attack");
                 
-                Instantiate(gasterBlaster, _player.transform.position, Quaternion.identity);
+                Instantiate(gasterBlaster, transform.position + new Vector3(2,0,0) * _direction.AsSign(), Quaternion.identity);
                 
                 yield return new WaitForSeconds(cooldown/3);
                 break;

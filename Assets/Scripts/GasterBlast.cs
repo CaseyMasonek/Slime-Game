@@ -10,12 +10,14 @@ public class GasterBlast : MonoBehaviour
     
     private SpriteRenderer _renderer;
     private GameObject _player;
+    private Animator _animator;
     private bool _isActive;
     
     private void Start()
     {
         _player = GameObject.Find("Player");
         _renderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
         
         _renderer.color = new Color(1, 1, 1, 0.5f);
         
@@ -25,6 +27,8 @@ public class GasterBlast : MonoBehaviour
     private IEnumerator Blast()
     {
         yield return new WaitForSeconds(gracePeriod);
+        _animator.SetTrigger("Blast");
+        
         _renderer.color = new Color(1, 1, 1, 1);
         _isActive = true;
         
