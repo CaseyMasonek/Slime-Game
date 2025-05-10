@@ -8,10 +8,13 @@ public class GasterBlast : MonoBehaviour
     [SerializeField] private float gracePeriod;
     [SerializeField] private float activeDuration;
     
+    [SerializeField] private AudioClip blastSFX;
+    
     private GameObject _player;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
     private GameObject _boss;
+    private AudioSource _audio;
     
     private bool _isActive;
     
@@ -21,6 +24,7 @@ public class GasterBlast : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _boss = GameObject.Find("Boss");
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _audio = GameObject.Find("Player").GetComponent<AudioSource>();
         
         StartCoroutine(Blast());
     }
@@ -29,6 +33,7 @@ public class GasterBlast : MonoBehaviour
     {
         yield return new WaitForSeconds(gracePeriod);
         _animator.SetTrigger("Blast");
+        _audio.PlayOneShot(blastSFX);
 
         _isActive = true;
         
