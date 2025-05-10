@@ -37,7 +37,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.15, y: -7.17, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1559512414581910414}
@@ -193,8 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c8785a5cec824669a91a0c47d408312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 847698583067957187, guid: 24ef09afd4f7b4292926cd74cef22511, type: 3}
-  projectileSpawnDistance: 5
+  projectilePrefab: {fileID: 847698583067957187, guid: d016baa430a36324eb7fbba88f2e9a96, type: 3}
+  projectileSpawnDistance: 3
 --- !u!61 &457665924265279845
 BoxCollider2D:
   m_ObjectHideFlags: 0

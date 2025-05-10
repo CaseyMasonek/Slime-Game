@@ -8,18 +8,19 @@ public class GasterBlast : MonoBehaviour
     [SerializeField] private float gracePeriod;
     [SerializeField] private float activeDuration;
     
-    private SpriteRenderer _renderer;
     private GameObject _player;
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
+    private GameObject _boss;
+    
     private bool _isActive;
     
     private void Start()
     {
         _player = GameObject.Find("Player");
-        _renderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
-        
-        _renderer.color = new Color(1, 1, 1, 0.5f);
+        _animator = GetComponentInChildren<Animator>();
+        _boss = GameObject.Find("Boss");
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         
         StartCoroutine(Blast());
     }
@@ -28,8 +29,7 @@ public class GasterBlast : MonoBehaviour
     {
         yield return new WaitForSeconds(gracePeriod);
         _animator.SetTrigger("Blast");
-        
-        _renderer.color = new Color(1, 1, 1, 1);
+
         _isActive = true;
         
         yield return new WaitForSeconds(activeDuration);

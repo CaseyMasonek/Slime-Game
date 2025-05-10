@@ -53,6 +53,7 @@ public class ProjectileEnemyController : MonoBehaviour, IMovementController, IAt
     private IEnumerator Attack()
     {
         _animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(.4f);
         OnAttack?.Invoke();
         yield return new WaitForSeconds(cooldown);
         StartCoroutine(Attack());

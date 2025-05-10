@@ -199,6 +199,8 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
             _index = _elements.Count >= 4 ? 3 : 0;
         }
         
+        _slash.transform.position = transform.position + new Vector3(1 * _direction.AsSign(), 0, 0);
+        
         switch (element)
         {
             case Element.Air:
@@ -312,7 +314,12 @@ public class SlimeController : MonoBehaviour, IMovementController, IJumpControll
                     _audioSource.PlayOneShot(waterAttackSfx);
                     
                     _slash.GetComponent<SpriteRenderer>().enabled = true;
-                    _slash.GetComponent<Animator>().enabled = true;
+                    var _slashAnim = _slash.GetComponent<Animator>();
+                    _slashAnim.enabled = true;
+                    _slashAnim.Rebind();
+                    _slashAnim.Update(0f);
+                    _slashAnim.Play("WaterSlashAnim");
+                    
 
                     StartCoroutine(HideSlash());
                     

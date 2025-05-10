@@ -48,11 +48,8 @@ public class MinibossController : MonoBehaviour, IMovementController, IJumpContr
         
         if (hit.collider != null)
         {
-            Debug.Log(hit.collider.gameObject.name);
-            
             if (hit.distance < 2)
             {
-                Debug.Log(hit.point.ToString());
                 OnJump?.Invoke();
             }
         }

@@ -44,16 +44,28 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
 
     public float GetMovement()
     {
-        if (Vector3.Distance(_player.transform.position, transform.position) < 5)
+        // if (Vector3.Distance(_player.transform.position, transform.position) < 2)
+        // {
+        //     if (_player.transform.position.x > transform.position.x)
+        //     {
+        //         return -1; // if the player is to the right, move left
+        //     }
+        //
+        //     return 1; // otherwise move right
+        // }
+        //
+        // return 0;
+        
+        if (Vector3.Distance(transform.position, _player.transform.position) > 3)
         {
-            if (_player.transform.position.x > transform.position.x)
+            if (_player.transform.position.x < transform.position.x)
             {
-                return -1; // if the player is to the right, move left
+                return -1;
             }
-
-            return 1; // otherwise move right
+            
+            return 1;
         }
-
+        
         return 0;
     }
 
@@ -77,9 +89,15 @@ public class BossController : MonoBehaviour, IMovementController, IAttackControl
                 // Gaster blaster
                 _animator.SetTrigger("Attack");
                 
-                Instantiate(gasterBlaster, transform.position + new Vector3(2,0,0) * _direction.AsSign(), Quaternion.identity);
+                GameObject blaster = Instantiate(gasterBlaster, transform.position + new Vector3(5 * _direction.AsSign(),-.6f,0), Quaternion.identity);
+
+                if (_direction.AsSign() == -1)
+                {
+                    Debug.Log("LEFT BLAST");
+                    blaster.transform.GetChild(0).GetComponent<SpriteRenderer>().flipX = true;
+                }
                 
-                yield return new WaitForSeconds(cooldown/3);
+                yield return new WaitForSeconds(cooldown);
                 break;
         }
         

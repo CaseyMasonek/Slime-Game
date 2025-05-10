@@ -16,24 +16,8 @@ public class EnemyDie : MonoBehaviour, IDieController
             _alive = false;
             gameObject.GetComponent<SpriteRenderer>().enabled = false;
             gameObject.GetComponent<BoxCollider2D>().enabled = false;
-            StartCoroutine(Die());
+            Destroy(gameObject);
         }
-    }
-
-    private IEnumerator Die()
-    {
-        if (GetComponent<AudioSource>())
-        {
-            var audio = GetComponent<AudioSource>();
-            audio.Play();
-            
-            while (audio.isPlaying)
-            {
-                yield return null;
-            }
-        }
-
-        Destroy(gameObject);
     }
     
     public void OnTakeDamage() {}
